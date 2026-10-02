@@ -12,7 +12,7 @@ from settings import *
 from start_screen import *
 from cards import *
 from round_logic import *
-
+from game_screen import *
 
 async def main() -> None:
 
@@ -33,6 +33,7 @@ async def main() -> None:
     # MAIN GAME LOOP
     running: bool = True
     game_state: str = "START_SCREEN"
+    game_screen: GameScreen = GameScreen()
     while running:
         if game_state == "START_SCREEN":
             game_state = display_start_screen(screen)
@@ -42,7 +43,7 @@ async def main() -> None:
                 base_number: int = initialize_round()
                 round_initialized = True
             round_initialized = run_round(base_number)
-            
+            game_screen.display_game_screen(screen) 
             
         elif game_state == "GAME_OVER":
             pass
