@@ -7,10 +7,10 @@ First Last
 """
 
 class AddingCard():
-    def run_card(number):
+    def apply(number):
         return number+2
 
 class MultiplyCard():
-    def run_card(number):
+    def apply(number):
         return number*2
     

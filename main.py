@@ -7,16 +7,21 @@ First Last
 """
 
 import asyncio
+from enum import Enum
 import pygame
+
 from settings import *
 from start_screen import *
 from cards import *
-from round_logic import *
+from player import *
 
+test_player: Player = Player()
+a: AddingCard = AddingCard()
+m: MultiplyCard = MultiplyCard()
+test_player.add_card(AddingCard)
+test_player.add_card(MultiplyCard)
 
 async def main() -> None:
-
-    round_initialized: bool = False
 
     pygame.init()
 
@@ -35,15 +40,12 @@ async def main() -> None:
     game_state: str = "START_SCREEN"
     while running:
         if game_state == "START_SCREEN":
-            game_state = display_start_screen(screen)
+            test_player.calculate_score(14)
+            print(test_player.get_score())
 
         elif game_state == "PLAYING":
-            if not round_initialized: 
-                base_number: int = initialize_round()
-                round_initialized = True
-            round_initialized = run_round(base_number)
-            
-            
+            pass
+
         elif game_state == "GAME_OVER":
             pass
 
@@ -62,7 +64,6 @@ async def main() -> None:
         await asyncio.sleep(0)
 
     # when the loop breaks, shut down pygame gracefully
-    print("Running loop ended.")
     pygame.quit()
 
 
