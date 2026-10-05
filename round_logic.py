@@ -3,7 +3,7 @@ from cards import *
 import pygame
 
 random_card_amount: int = 2
-CARD_IDS: dict = {1 : AddingCard, 2: MultiplyCard}
+CARD_IDS: dict = {1: Card, 2: Card}
 cards: list = []
 base_number: int = -1
 

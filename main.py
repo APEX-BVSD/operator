@@ -8,13 +8,15 @@ First Last
 
 import asyncio
 import pygame
-
 from settings import *
 from start_screen import *
 from cards import *
-from player import Player
+from round_logic import *
+
 
 async def main() -> None:
+
+    round_initialized: bool = False
 
     pygame.init()
 
@@ -33,11 +35,15 @@ async def main() -> None:
     game_state: str = "START_SCREEN"
     while running:
         if game_state == "START_SCREEN":
-            pass
+            game_state = display_start_screen(screen)
 
         elif game_state == "PLAYING":
-            pass
-
+            if not round_initialized: 
+                base_number: int = initialize_round()
+                round_initialized = True
+            round_initialized = run_round(base_number)
+            
+            
         elif game_state == "GAME_OVER":
             pass
 
@@ -56,6 +62,7 @@ async def main() -> None:
         await asyncio.sleep(0)
 
     # when the loop breaks, shut down pygame gracefully
+    print("Running loop ended.")
     pygame.quit()
 
 
