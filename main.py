@@ -13,13 +13,7 @@ import pygame
 from settings import *
 from start_screen import *
 from cards import *
-from player import *
-
-test_player: Player = Player()
-a: AddingCard = AddingCard()
-m: MultiplyCard = MultiplyCard()
-test_player.add_card(AddingCard)
-test_player.add_card(MultiplyCard)
+from player import Player
 
 async def main() -> None:
 
@@ -40,8 +34,7 @@ async def main() -> None:
     game_state: str = "START_SCREEN"
     while running:
         if game_state == "START_SCREEN":
-            test_player.calculate_score(14)
-            print(test_player.get_score())
+            pass
 
         elif game_state == "PLAYING":
             pass
