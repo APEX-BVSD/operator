@@ -36,8 +36,8 @@ class Player:
         -Liz
     """
     def bonus_score(self):
-        if self.__score_cards != []:
-            for card in self.__score_cards:
+        if self._score_cards != []:
+            for card in self._score_cards:
                 try:
                     self._score = card.apply(self._score)
                 except:

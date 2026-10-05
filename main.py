@@ -7,7 +7,6 @@ First Last
 """
 
 import asyncio
-from enum import Enum
 import pygame
 
 from settings import *
