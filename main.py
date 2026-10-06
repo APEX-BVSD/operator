@@ -12,7 +12,7 @@ from settings import *
 from start_screen import *
 from cards import *
 from round_logic import *
-
+from game_screen import *
 
 async def main() -> None:
 
@@ -22,6 +22,9 @@ async def main() -> None:
 
     # set the screen dimensions
     screen: pygame.Surface = pygame.display.set_mode( (SCREEN_WIDTH, SCREEN_HEIGHT) )
+
+    # create the UI
+    ui: UI = UI()
 
     # set title
     pygame.display.set_caption(GAME_TITLE)
@@ -33,16 +36,18 @@ async def main() -> None:
     # MAIN GAME LOOP
     running: bool = True
     game_state: str = "START_SCREEN"
+    game_screen: GameScreen = GameScreen()
     while running:
+
+
         if game_state == "START_SCREEN":
             game_state = display_start_screen(screen)
 
         elif game_state == "PLAYING":
             if not round_initialized: 
                 base_number: int = initialize_round()
-                round_initialized = True
-            round_initialized = run_round(base_number)
-            
+                round_initialized = True 
+            game_screen.display_game_screen(screen) 
             
         elif game_state == "GAME_OVER":
             pass
@@ -51,7 +56,19 @@ async def main() -> None:
             print(f"Invalid game state: {game_state}")
             running = False
 
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_2:
+                run_round_math(base_number)
+                round_initialized = False
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                click_x, click_y = event.pos
+                ui.process_click(click_x,click_y)
+            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                ui._dragged_object = None
 
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        ui.process_ui(mouse_x, mouse_y)
+        ui.draw_objects(screen)
         
         # render the screen
         pygame.display.flip()
@@ -64,6 +81,7 @@ async def main() -> None:
     # when the loop breaks, shut down pygame gracefully
     print("Running loop ended.")
     pygame.quit()
+
 
 
 asyncio.run(main())

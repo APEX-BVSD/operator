@@ -1,6 +1,8 @@
 import random
 from cards import *
 import pygame
+from game_screen import *
+from uicontrol import *
 
 random_card_amount: int = 2
 CARD_IDS: dict = {1: Card(), 2: Card()}
@@ -14,17 +16,10 @@ def initialize_round():
     cards.clear()
     for _ in range(random_card_amount):
         cards.append(CARD_IDS[random.randint(1,len(CARD_IDS))])
-    return random.randint(1,100) # Maybe have this change as the game goes on?
+    number:int = random.randint(1,100) # Maybe have this change as the game goes on?
+    GameScreen.current_number = number
+    return number
 
-def run_round(number):
-    '''
-    Handles round logic after intilizing and before ending
-    '''
-    for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_2:
-                    run_round_math(number)
-                    return False
-    return True
 def run_round_math(number):
     '''
     Handles the math at round end 
