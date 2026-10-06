@@ -15,26 +15,26 @@ def display_start_screen(screen: pygame.Surface) -> str:
     Displays the start screen text and waits for the player to press the space key.
     Returns "PLAYING" as the next game state.
     """
-    # 1. Clear the screen with a clean background color
+    # Clear the screen with a clean background color
     screen.fill((20, 24, 35))
 
-    # 2. Initialize font styles safely using Pygame defaults
-    title_font = pygame.font.Font(None, 72)
+    # Initialize font styles safely using Pygame defaults
+    title_font = pygame.font.Font(None, 80)
     prompt_font = pygame.font.Font(None, 40)
 
-    # 3. Render and center the Placeholder Title
-    title_text = title_font.render("[Title]", True, (255, 215, 0)) # Gold text
+    # Render and center the Placeholder Title
+    title_text = title_font.render("[Title]", True, (255, 255, 0))
     title_x = screen.get_width() // 2 - title_text.get_width() // 2
     title_y = screen.get_height() // 3
     screen.blit(title_text, (title_x, title_y))
 
-    # 4. Render and center the action prompt
-    prompt_text = prompt_font.render("Press SPACE to start.", True, (255, 255, 255))
+    # Render and center the action prompt
+    prompt_text = prompt_font.render("Press SPACE to start.", True, (200, 200, 255))
     prompt_x = screen.get_width() // 2 - prompt_text.get_width() // 2
     prompt_y = screen.get_height() * 2 // 3
     screen.blit(prompt_text, (prompt_x, prompt_y))
 
-    # 5. Process the events, if the space button was pressed, move to the next screen
+    # Process the events, if the space button was pressed, move to the next screen
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             return "QUIT"
