@@ -1,3 +1,5 @@
+from cards import *
+
 class Player:
     _cards: list = []
     _score_cards: list = []

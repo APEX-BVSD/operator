@@ -3,7 +3,7 @@ from cards import *
 import pygame
 
 random_card_amount: int = 2
-CARD_IDS: dict = {1: Card, 2: Card}
+CARD_IDS: dict = {1: Card(), 2: Card()}
 cards: list = []
 base_number: int = -1
 
@@ -33,5 +33,5 @@ def run_round_math(number):
     final_number: int = number
 
     for card in cards:
-        final_number = card.run_card(final_number)
+        final_number = card.apply(final_number)
     print(final_number)
