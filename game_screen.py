@@ -22,7 +22,7 @@ class GameScreen():
         """
         
         # draw the screen        
-        screen.fill("black")
+        screen.fill("green")
 
         font: pygame.font.Font = pygame.font.Font(size=48)
         text_box: pygame.Surface = font.render(str(self.current_number), True, "white")
