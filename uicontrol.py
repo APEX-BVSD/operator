@@ -1,34 +1,31 @@
 import pygame
 from settings import *
+from objects import *
+import pygame
+from settings import *
 
-evil_square: pygame.Rect = pygame.Rect(0,
-                                       0,
-                                       300, 300
- )
-
-
-image: pygame.Surface = pygame.image.load("Untitled.png")
 
 class UI():
     _clickable_objects: list = []
-    _draggable_objects: list = [evil_square]
-    _drawn_objects: list = []
-    _dragged_object: pygame.Surface = None
+    _draggable_objects: list = [placeholder]
+    _drawn_objects: list = [placeholder]
+    _dragged_object = None
+    _dragged_x: int = 0
+    _dragged_y: int = 0
 
     def process_click(self, x, y):
         for object in self._draggable_objects:
-            if x >= object.left and x <= object.right and y >= object.top and y <= object.bottom:
+            if x >= object.hitbox.left and x <= object.hitbox.right and y >= object.hitbox.top and y <= object.hitbox.bottom:
                 self._dragged_object = object
-                pygame.Surface.set_alpha(self._dragged_object, 50)
+                
 
     def process_ui(self, x, y):
         if self._dragged_object != None:
-            self._dragged_object.left = x - (pygame.Surface.get_width(self._dragged_object) / 2)
-            self._dragged_object.top = y - (pygame.Surface.get_height(self._dragged_object) / 2)
-            
+            self._dragged_object.hitbox.left = x - (self._dragged_object.hitbox.width / 2)
+            self._dragged_object.hitbox.top = y - (self._dragged_object.hitbox.height / 2)
 
     def draw_objects(self, screen: pygame.Surface):  
         for object in self._drawn_objects:
-            screen.blit(object, (object.topleft))
+            screen.blit(object.image, object.hitbox)
         if self._dragged_object != None:
-            screen.blit(self._dragged_object, (self._dragged_object.topleft))
+            screen.blit(self._dragged_object.image, (self._dragged_x, self._dragged_y))
