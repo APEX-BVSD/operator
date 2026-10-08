@@ -1,6 +1,6 @@
 import pygame
 
-class placeholder():
+class Placeholder():
     hitbox: pygame.Rect = pygame.Rect(0,
                                        0,
                                        300, 300
