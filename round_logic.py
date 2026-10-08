@@ -12,6 +12,8 @@ base_number: int = -1
 def initialize_round():
     '''
     Assigns starting values and cards to the round
+
+    Returns the base number
     '''
     cards.clear()
     for _ in range(random_card_amount):
@@ -23,6 +25,8 @@ def initialize_round():
 def run_round_math(number):
     '''
     Handles the math at round end 
+
+    number: number math is being done on
     '''
     
     final_number: int = number

@@ -6,14 +6,23 @@ class Player:
     _score: int = 0
 
     def add_card(self, card):
+        '''
+        
+        '''
         self._cards.append(card)
 
     def swap_card_order(self, a: int, b: int):
+        '''
+        
+        '''
         _temp_card: Card = self._cards[a]
         self._cards[a] = self._cards[b]
         self._cards[b] = _temp_card
 
     def calculate_score(self, base: int):
+        '''
+        
+        '''
         self._score += base
         card_index: int = 0
         try:
@@ -38,6 +47,9 @@ class Player:
         -Liz
     """
     def bonus_score(self):
+        '''
+        
+        '''
         if self._score_cards != []:
             for card in self._score_cards:
                 try:
@@ -46,4 +58,7 @@ class Player:
                     print("invalid card/type error 2")
     
     def get_score(self):
+        '''
+        
+        '''
         return self._score
