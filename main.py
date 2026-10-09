@@ -1,8 +1,8 @@
 """
 Describe your game.
-Month Year
-First Last
-First Last 
+Sep 2026
+Elizabeth Posusta
+Carter Quarles
 First Last 
 """
 
@@ -10,7 +10,7 @@ import asyncio
 import pygame
 from settings import *
 from start_screen import *
-from cards import *
+from cards import Card
 from round_logic import *
 from game_screen import *
 
