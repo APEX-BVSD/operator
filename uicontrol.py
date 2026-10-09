@@ -3,37 +3,48 @@ from settings import *
 from objects import *
 import pygame
 from settings import *
+from cardlists import *
 
+vertical_list: CardList = VerticalList()
+horizontal_list: CardList = HorizontalList()
 
 class UI():
     _clickable_objects: list = []
-    _vertical_list: list = []
-    _horizontal_list: list = [Placeholder1, Placeholder2, Placeholder3, Placeholder4, Placeholder5, Placeholder6]
-    _drawn_objects: list = [Placeholder1, Placeholder2, Placeholder3, Placeholder4, Placeholder5, Placeholder6]
+    _card_lists: list[CardList] = [horizontal_list, vertical_list]
+    _drawn_objects: list = []
     _dragged_object = None
     _dragged_sprite = None
     _dragged_index = None
     _dragged_x: int = 0
     _dragged_y: int = 0
-    
 
-    def process_click(self, x, y):
+    def setter(self, reset):
+        if reset:
+            self._dragged_object = None
+            self._dragged_index = None
+            self._dragged_sprite = None
+            for list in self._card_lists:
+                list._dragged_object = None
+                list._dragged_sprite = None
+                list._dragged_index = None
+
+        for list in self._card_lists:
+            if list._dragged_object != None:
+                self._dragged_object = list._dragged_object
+                self._dragged_sprite = list._dragged_sprite
+                self._dragged_index = list._dragged_index
+            list.set_card_position()
+
+    def process_list_click(self, x, y):
         '''
-        Processes a click by checking if it is within an interactable object
+        Processes a click by passing it to the cardlists
 
         X: the x coordinate of the click
         Y: the y coordinate of the click
         '''
-
-        counter: int = 0 
-
-        for object in self._horizontal_list:
-            if x >= object.hitbox.left + object.position[0] and x <= object.hitbox.right + object.position[0] and y >= object.hitbox.top + object.position[1] and y <= object.hitbox.bottom + object.position[1]:
-                self._dragged_object = object
-                self._dragged_sprite = pygame.Surface.copy(object.image)
-                self._dragged_index = counter
-                pygame.Surface.set_alpha(self._dragged_sprite, 100)
-            counter += 1
+        for list in self._card_lists:
+            list.process_click(x, y)
+        
                 
 
     def move_dragged(self, x, y):
@@ -43,40 +54,21 @@ class UI():
         X: the x coordinate of the cursor
         Y: the y coordinate of the cursor    
         '''
-
-        counter: int = 0
         
         if self._dragged_object != None:
             self._dragged_x = x - (self._dragged_object.hitbox.width / 2)
             self._dragged_y = y - (self._dragged_object.hitbox.height / 2)
 
-        for card in self._horizontal_list:
-            card.position = (100 * counter, 0)
-            counter += 1
-
-    def check_card_movement(self, x, y):
+    def check_list_card_movement(self, x, y):
         '''
         Checks if cards need to be moved after a drag stops
 
         X: the x coordinate of the cursor
         Y: the y coordinate of the cursor    
         '''
-        if x <= (len(self._horizontal_list) + 1) * 100 - 50 and y <= 100:
-            new_index: int = (x - 50) // 100 + 1
-            if new_index > self._dragged_index:
-                self._horizontal_list.insert(new_index, self._horizontal_list[self._dragged_index])
-                self._horizontal_list.pop(self._dragged_index)
 
-            elif self._dragged_index == new_index:
-                pass
-
-            else:
-                print("dragged index", self._dragged_index)
-                print(self._horizontal_list[self._dragged_index])
-                self._horizontal_list.insert(new_index, self._horizontal_list[self._dragged_index])
-                self._horizontal_list.pop(self._dragged_index + 1)
-            print(new_index)
-            print(self._horizontal_list)
+        for list in self._card_lists:
+            list.check_card_movement(x, y)
 
     def draw_objects(self, screen: pygame.Surface):  
         '''
@@ -84,7 +76,13 @@ class UI():
 
         screen: the game screen to be drawn on        
         '''
+        self._drawn_objects.clear()
         
+        counter: int = 0
+        for list in self._card_lists:
+            for card in list.card_list[counter]:
+                self._drawn_objects.append(card) 
+
         for object in self._drawn_objects:
             screen.blit(object.image, object.position)
           

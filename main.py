@@ -17,6 +17,7 @@ from game_screen import *
 async def main() -> None:
 
     round_initialized: bool = False
+    reset_values: bool = False
 
     pygame.init()
 
@@ -41,6 +42,12 @@ async def main() -> None:
 
         mouse_x, mouse_y = pygame.mouse.get_pos()
 
+        if reset_values:
+            ui.setter(True)
+            reset_values = False
+        else:
+            ui.setter(False)
+
         if game_state == "START_SCREEN":
             game_state = display_start_screen(screen)
 
@@ -63,12 +70,10 @@ async def main() -> None:
                 round_initialized = False
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 click_x, click_y = event.pos
-                ui.process_click(click_x,click_y)
+                ui.process_list_click(click_x,click_y)
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-                ui.check_card_movement(mouse_x, mouse_y)
-                ui._dragged_object = None
-                ui._dragged_sprite = None
-                ui._dragged_index = None
+                ui.check_list_card_movement(mouse_x, mouse_y)
+                reset_values = True
 
         ui.move_dragged(mouse_x, mouse_y)
         ui.draw_objects(screen)
