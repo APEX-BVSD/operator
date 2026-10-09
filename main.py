@@ -67,7 +67,7 @@ async def main() -> None:
                 ui._dragged_object = None
 
         mouse_x, mouse_y = pygame.mouse.get_pos()
-        ui.process_ui(mouse_x, mouse_y)
+        ui.move_dragged(mouse_x, mouse_y)
         ui.draw_objects(screen)
         
         # render the screen
