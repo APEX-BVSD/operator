@@ -8,35 +8,62 @@ First Last
 
 
 import pygame
+import math
 from pygame import font
+from settings import SCREEN_WIDTH, SCREEN_HEIGHT
+
+# Keep track of animation timing across frames
+animation_timer: float = 0.0
 
 def display_start_screen(screen: pygame.Surface) -> str:
-    """
-    Displays the start screen text and waits for the player to press the space key.
-    Returns "PLAYING" as the next game state.
 
-    Parameters:
-    screen(pygame.Surface): The screen to render the game on
+    global animation_timer
     
-    Returns:
-    str: The game state the game should use in the next frame
+    # 1. Creative Dynamic Background (A smooth, subtle breathing pulse effect)
+    # Oscillates between 15 and 45 to create an ambient midnight-blue glow
+    pulse_intensity = int(30 + 15 * math.sin(animation_timer))
+    screen.fill((20, 24, pulse_intensity))
+    animation_timer += 0.05 # Controls how fast the background pulses
+
+    # 2. Setup Fonts safely
+    title_font = pygame.font.Font(None, 74)
+    prompt_font = pygame.font.Font(None, 36)
+
+    # 3. Render Title Text with a Drop-Shadow Effect
+    title_string = "[Title]"
+    title_shadow = title_font.render(title_string, True, (10, 12, 20))
+    title_main = title_font.render(title_string, True, (255, 215, 0)) # Gold text
     
-    """
+    title_x = SCREEN_WIDTH // 2 - title_main.get_width() // 2
+    title_y = SCREEN_HEIGHT // 3
     
-    # draw the screen        
-    screen.fill("black")
+    # Blit shadow slightly offset down and right, then blit the main title over it
+    screen.blit(title_shadow, (title_x + 3, title_y + 3))
+    screen.blit(title_main, (title_x, title_y))
 
-    font: pygame.font.Font = pygame.font.Font(size=48)
-    text_box: pygame.Surface = font.render("Press SPACE to start.", True, "white")
-    screen.blit(text_box, (screen.get_width() // 2 - text_box.get_width() // 2, screen.get_height() // 2))
+    # 4. Render Action Prompt with a Fading Visual Effect
+    # Makes the text smoothly fade in and out to grab player attention
+    alpha_fade = int(155 + 100 * math.sin(animation_timer * 2))
+    prompt_text = prompt_font.render("Press SPACE to start.", True, (200, 200, 255))
+    
+    # Set the transparency (alpha) level on the text surface container
+    prompt_text.set_alpha(alpha_fade)
+    
+    prompt_x = SCREEN_WIDTH // 2 - prompt_text.get_width() // 2
+    prompt_y = SCREEN_HEIGHT * 2 // 3
+    screen.blit(prompt_text, (prompt_x, prompt_y))
 
-
-    # process the events, if the space button was pressed, move to the next screen
+    # 5. Process Input Event Loops Without Blocking Window Controls
     for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                return "PLAYING"
+        # Cleanly exits the window if the user hits the top corner close button
+        if event.type == pygame.QUIT:
+            return "QUIT"
+            
+        # Safe game transition triggers
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            return "PLAYING"
 
-    # stay on the current screen
+    # Maintain screen loop sequence
     return "START_SCREEN"
 
 
