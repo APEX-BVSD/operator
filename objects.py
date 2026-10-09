@@ -15,3 +15,13 @@ class Placeholder2(PlaceholderPlaceholder):
 
 class Placeholder3(PlaceholderPlaceholder):
     image: pygame.Surface = pygame.image.load("placeholder3.png")
+
+class Placeholder4(PlaceholderPlaceholder):
+    image: pygame.Surface = pygame.image.load("placeholder1.png")
+    
+class Placeholder5(PlaceholderPlaceholder):
+    image: pygame.Surface = pygame.image.load("placeholder2.png")
+
+class Placeholder6(PlaceholderPlaceholder):
+    image: pygame.Surface = pygame.image.load("placeholder3.png")
+

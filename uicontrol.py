@@ -8,8 +8,8 @@ from settings import *
 class UI():
     _clickable_objects: list = []
     _vertical_list: list = []
-    _horizontal_list: list = [Placeholder1, Placeholder2, Placeholder3]
-    _drawn_objects: list = [Placeholder1, Placeholder2, Placeholder3]
+    _horizontal_list: list = [Placeholder1, Placeholder2, Placeholder3, Placeholder4, Placeholder5, Placeholder6]
+    _drawn_objects: list = [Placeholder1, Placeholder2, Placeholder3, Placeholder4, Placeholder5, Placeholder6]
     _dragged_object = None
     _dragged_sprite = None
     _dragged_index = None
@@ -33,6 +33,7 @@ class UI():
                 self._dragged_sprite = pygame.Surface.copy(object.image)
                 self._dragged_index = counter
                 pygame.Surface.set_alpha(self._dragged_sprite, 100)
+            counter += 1
                 
 
     def move_dragged(self, x, y):
@@ -70,8 +71,10 @@ class UI():
                 pass
 
             else:
+                print("dragged index", self._dragged_index)
+                print(self._horizontal_list[self._dragged_index])
                 self._horizontal_list.insert(new_index, self._horizontal_list[self._dragged_index])
-                self._horizontal_list.pop(self._dragged_index - 1)
+                self._horizontal_list.pop(self._dragged_index + 1)
             print(new_index)
             print(self._horizontal_list)
 
