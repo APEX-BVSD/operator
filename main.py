@@ -39,6 +39,7 @@ async def main() -> None:
     game_screen: GameScreen = GameScreen()
     while running:
 
+        mouse_x, mouse_y = pygame.mouse.get_pos()
 
         if game_state == "START_SCREEN":
             game_state = display_start_screen(screen)
@@ -64,9 +65,11 @@ async def main() -> None:
                 click_x, click_y = event.pos
                 ui.process_click(click_x,click_y)
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                ui.check_card_movement(mouse_x, mouse_y)
                 ui._dragged_object = None
+                ui._dragged_sprite = None
+                ui._dragged_index = None
 
-        mouse_x, mouse_y = pygame.mouse.get_pos()
         ui.move_dragged(mouse_x, mouse_y)
         ui.draw_objects(screen)
         
