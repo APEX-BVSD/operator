@@ -15,6 +15,7 @@ class UI():
     _dragged_object = None
     _dragged_sprite = None
     _dragged_index = None
+    _dragged_list = None
     _dragged_x: int = 0
     _dragged_y: int = 0
 
@@ -33,6 +34,7 @@ class UI():
                 self._dragged_object = list._dragged_object
                 self._dragged_sprite = list._dragged_sprite
                 self._dragged_index = list._dragged_index
+                self._dragged_list = list
             list.set_card_position()
 
     def process_list_click(self, x, y):
@@ -68,7 +70,7 @@ class UI():
         '''
 
         for list in self._card_lists:
-            list.check_card_movement(x, y)
+            list.check_card_movement(x, y, self._dragged_list, self._dragged_index)
 
     def draw_objects(self, screen: pygame.Surface):  
         '''
@@ -78,9 +80,8 @@ class UI():
         '''
         self._drawn_objects.clear()
         
-        counter: int = 0
         for list in self._card_lists:
-            for card in list.card_list[counter]:
+            for card in list._card_list:
                 self._drawn_objects.append(card) 
 
         for object in self._drawn_objects:

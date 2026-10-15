@@ -56,6 +56,8 @@ async def main() -> None:
                 base_number: int = initialize_round()
                 round_initialized = True 
             game_screen.display_game_screen(screen) 
+            ui.move_dragged(mouse_x, mouse_y)
+            ui.draw_objects(screen)
             
         elif game_state == "GAME_OVER":
             pass
@@ -74,9 +76,6 @@ async def main() -> None:
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 ui.check_list_card_movement(mouse_x, mouse_y)
                 reset_values = True
-
-        ui.move_dragged(mouse_x, mouse_y)
-        ui.draw_objects(screen)
         
         # render the screen
         pygame.display.flip()
