@@ -7,8 +7,12 @@ First Last
 """
 
 import random
+import pygame
 
 from enum import IntEnum
+
+CWIDTH: int = 50
+CHEIGHT: int = 50
 
 class PossibleCondition(IntEnum):
     IS_NTH = 1,
@@ -40,10 +44,12 @@ class Condition:
 
 
 
-class Card():
+class Card:
     _value: int = 0
     _operation: str = "ADD"
     _condition: Condition = Condition()
+    image: Surface = pygame.image.load("assets/cardbg.png")
+    hitbox: Rect = pygame.Rect(0, 0, image.width, image.height)
 
     def __init__(self, v: int, o: str, c: Condition):
         self._value = v

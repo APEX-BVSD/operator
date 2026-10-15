@@ -1,18 +1,18 @@
 import pygame
 from settings import *
-from objects import *
-import pygame
-from settings import *
 from cardlists import *
 
-vertical_list: CardList = VerticalList()
-horizontal_list: CardList = HorizontalList()
+vertical_list: CardList = CardList(list(), 10, 10, True)
+horizontal_list: CardList = CardList(list(), 10, 500, False)
+
+vertical_list.populate(5)
+horizontal_list.populate(5)
 
 class UI():
-    _clickable_objects: list = []
+    _clickable_objs: list = []
     _card_lists: list[CardList] = [horizontal_list, vertical_list]
-    _drawn_objects: list = []
-    _dragged_object = None
+    _drawn_objs: list = []
+    _dragged_obj = None
     _dragged_sprite = None
     _dragged_index = None
     _dragged_list = None
@@ -21,17 +21,17 @@ class UI():
 
     def setter(self, reset):
         if reset:
-            self._dragged_object = None
+            self._dragged_obj = None
             self._dragged_index = None
             self._dragged_sprite = None
             for list in self._card_lists:
-                list._dragged_object = None
+                list._dragged_obj = None
                 list._dragged_sprite = None
                 list._dragged_index = None
 
         for list in self._card_lists:
-            if list._dragged_object != None:
-                self._dragged_object = list._dragged_object
+            if list._dragged_obj != None:
+                self._dragged_obj = list._dragged_obj
                 self._dragged_sprite = list._dragged_sprite
                 self._dragged_index = list._dragged_index
                 self._dragged_list = list
@@ -51,15 +51,15 @@ class UI():
 
     def move_dragged(self, x, y):
         '''
-        Updates the position of the dragged object if there is one
+        Updates the position of the dragged obj if there is one
 
         X: the x coordinate of the cursor
         Y: the y coordinate of the cursor    
         '''
         
-        if self._dragged_object != None:
-            self._dragged_x = x - (self._dragged_object.hitbox.width / 2)
-            self._dragged_y = y - (self._dragged_object.hitbox.height / 2)
+        if self._dragged_obj != None:
+            self._dragged_x = x - (self._dragged_obj.hitbox.width / 2)
+            self._dragged_y = y - (self._dragged_obj.hitbox.height / 2)
 
     def check_list_card_movement(self, x, y):
         '''
@@ -78,14 +78,14 @@ class UI():
 
         screen: the game screen to be drawn on        
         '''
-        self._drawn_objects.clear()
+        self._drawn_objs.clear()
         
         for list in self._card_lists:
             for card in list._card_list:
-                self._drawn_objects.append(card) 
+                self._drawn_objs.append(card) 
 
-        for object in self._drawn_objects:
-            screen.blit(object.image, object.position)
+        for obj in self._drawn_objs:
+            screen.blit(obj.image, obj.position)
           
-        if self._dragged_object != None:
+        if self._dragged_obj != None:
             screen.blit(self._dragged_sprite, (self._dragged_x, self._dragged_y))
