@@ -1,0 +1,54 @@
+import pygame
+from objects import *
+from settings import *
+
+class Shop():
+
+    _available_cards: list = [Placeholder1(), Placeholder2(), Placeholder3(), Placeholder4(), Placeholder5(), Placeholder6()]
+    _cards_per_row: int = 3
+    _exit_button: pygame.Rect = pygame.Rect(300,
+                                            400,
+                                            200, 100
+    )
+
+    def process_click(self, x, y):
+        '''
+        Processes a click by checking if it is within an interactable object
+
+        X: the x coordinate of the click
+        Y: the y coordinate of the click
+        '''
+
+        counter: int = 0 
+
+        for obj in self._available_cards:
+            if x >= obj.hitbox.left + obj.position[0] and x <= obj.hitbox.right + obj.position[0] and y >= obj.hitbox.top + obj.position[1] and y <= obj.hitbox.bottom + obj.position[1]:
+                bought_card = self._available_cards[counter]
+                self._available_cards.pop(counter)
+                return bought_card
+            counter += 1
+
+        if x >= self._exit_button.left and x <= self._exit_button.right and y >= self._exit_button.top and y <= self._exit_button.bottom:
+            return "PLAYING"
+        return "SHOP"
+
+    def initialize_shop(self):
+        counter: int = 0
+        
+        for card in self._available_cards:
+            card.position = ((SCREEN_WIDTH -(self._cards_per_row * 100)) // 2 + (counter % 3) * 100, 100 + counter // self._cards_per_row * 100)
+            counter += 1
+
+    def draw_objects(self, screen: pygame.Surface):  
+        '''
+        Draws UI elements onto the screen
+
+        screen: the game screen to be drawn on        
+        '''
+
+        screen.fill("green")
+        
+        pygame.draw.rect(screen, (100, 100, 100), self._exit_button)
+        
+        for card in self._available_cards:
+            screen.blit(card.image, card.position)

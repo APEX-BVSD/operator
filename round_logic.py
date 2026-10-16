@@ -9,11 +9,14 @@ CARD_IDS: dict = {1: Card(), 2: Card()}
 cards: list = []
 base_number: int = -1
 
-def initialize_round():
+def initialize_round(player_cards):
     '''
     Assigns starting values and cards to the round
     '''
-    cards.clear()
+    vertical_list._card_list.clear()
+    for card in player_cards:
+        vertical_list._card_list.append(card)
+
     for _ in range(random_card_amount):
         cards.append(CARD_IDS[random.randint(1,len(CARD_IDS))])
     number:int = random.randint(1,100) # Maybe have this change as the game goes on?

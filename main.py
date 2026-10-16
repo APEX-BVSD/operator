@@ -13,6 +13,8 @@ from start_screen import *
 from cards import *
 from round_logic import *
 from game_screen import *
+from shop import *
+from player import *
 
 async def main() -> None:
 
@@ -26,6 +28,12 @@ async def main() -> None:
 
     # create the UI
     ui: UI = UI()
+
+    # create the shop
+    shop: Shop = Shop()
+
+    # create the plater
+    player: Player = Player()
 
     # set title
     pygame.display.set_caption(GAME_TITLE)
@@ -53,12 +61,15 @@ async def main() -> None:
 
         elif game_state == "PLAYING":
             if not round_initialized: 
-                base_number: int = initialize_round()
+                base_number: int = initialize_round(player._cards)
                 round_initialized = True 
             game_screen.display_game_screen(screen) 
             ui.move_dragged(mouse_x, mouse_y)
             ui.draw_objects(screen)
-            
+
+        elif game_state == "SHOP":
+            shop.draw_objects(screen)
+        
         elif game_state == "GAME_OVER":
             pass
 
@@ -67,15 +78,26 @@ async def main() -> None:
             running = False
 
         for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_2:
-                run_round_math(base_number)
-                round_initialized = False
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                click_x, click_y = event.pos
-                ui.process_list_click(click_x,click_y)
-            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-                ui.check_list_card_movement(mouse_x, mouse_y)
-                reset_values = True
+            if game_state == "PLAYING":
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_2:
+                    run_round_math(base_number)
+                    round_initialized = False
+                    game_state = "SHOP"
+                    shop.initialize_shop()
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    click_x, click_y = event.pos
+                    ui.process_list_click(click_x,click_y)
+                if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                    ui.check_list_card_movement(mouse_x, mouse_y)
+                    reset_values = True
+            elif game_state == "SHOP":
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    click_x, click_y = event.pos
+                    shop_output = shop.process_click(click_x, click_y)
+                    if isinstance(shop_output, str):
+                        game_state = shop_output
+                    else:
+                        player._cards.append(shop_output) 
         
         # render the screen
         pygame.display.flip()

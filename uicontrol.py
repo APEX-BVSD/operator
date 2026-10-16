@@ -19,7 +19,7 @@ class UI():
     _dragged_x: int = 0
     _dragged_y: int = 0
 
-    def setter(self, reset):
+    def setter(self, reset: bool):
         if reset:
             self._dragged_object = None
             self._dragged_index = None
