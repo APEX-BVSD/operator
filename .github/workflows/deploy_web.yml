@@ -1,0 +1,71 @@
+# This YAML file sets up a workflow to push a pygame based game
+# to Web Assembly using the pygbag package
+# J. Cihlar - October 2026
+name: Deploy Game to Web
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: 
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pygame and pygbag
+        run: |
+          pip install pygame-ce pygbag
+
+      - name: Build game
+        run: |
+          python -m pygbag --build .
+
+      # use to troubleshoot 
+      - name: Check Build Output
+        run: |
+           ls -la build/web
+    
+          # use already configured GitHub actions to deploy the GitHub Pages site
+      - name: Setup Pages
+        uses: actions/configure-pages@v5       
+
+       # Push to build/web
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web       
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    needs: build
+
+    environment:
+        name: github-pages
+        url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4                
+
+    

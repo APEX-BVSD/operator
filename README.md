@@ -1,7 +1,8 @@
 # Game Title
+SMOOTH OPERATOR
 
 ## About the Game
-Briefly describe your game and what the player will learn.
+SMOOTH OPERATOR is an incremental game where you use mathematical OPERATIONS to maximize your SCORE
 
 ## Learning Objective
 What skill or concept does your game teach or reinforce?

@@ -5,7 +5,7 @@ from game_screen import *
 from uicontrol import *
 
 random_card_amount: int = 2
-CARD_IDS: dict = {1: Card(), 2: Card()}
+CARD_IDS: dict = {1: random_card(15), 2: random_card(15)}
 cards: list = []
 base_number: int = -1
 
