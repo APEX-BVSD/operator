@@ -12,7 +12,9 @@ import pygame
 from enum import IntEnum
 
 CWIDTH: int = 50
-CHEIGHT: int = 50
+CHEIGHT: int = CWIDTH
+
+pygame.font.init()
 
 class PossibleCondition(IntEnum):
     IS_NTH = 1,
@@ -48,7 +50,10 @@ class Card:
     _value: int = 0
     _operation: str = "ADD"
     _condition: Condition = Condition()
+    _font: Font = pygame.Font()
+    _text: Surface = _font.render(str(_value), True, (255, 0, 0))
     image: Surface = pygame.image.load("assets/cardbg.png")
+    pygame.Surface.blit(_text, image)
     hitbox: Rect = pygame.Rect(0, 0, image.width, image.height)
 
     def __init__(self, v: int, o: str, c: Condition):

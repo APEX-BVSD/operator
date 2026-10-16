@@ -1,5 +1,6 @@
 import pygame
 from cards import *
+from settings import *
 
 class CardList():
 
@@ -36,7 +37,7 @@ class CardList():
                 pygame.Surface.set_alpha(self._dragged_sprite, 100)
             counter += 1
 
-    def check_card_movement(self, x, y, ls, index):
+    def check_card_movement(self, x, y, cards, index):
         '''
         Checks if cards need to be moved after a drag stops
 
@@ -45,9 +46,20 @@ class CardList():
         '''
 
         if self._is_vertical:
-            pass
+            hitbox: Rect = pygame.Rect(SIDE_LIST_TOP_LEFT[0], SIDE_LIST_TOP_LEFT[1] + CWIDTH / 2, CWIDTH, CWIDTH / 2)
         else:
-            pass
+            hitbox: Rect = pygame.Rect(BOTTOM_LIST_TOP_LEFT[0] + CWIDTH / 2, BOTTOM_LIST_TOP_LEFT[1], CWIDTH / 2, CWIDTH)
+
+        i: int = 0
+        for c in cards.card_list:
+            if hitbox.collidepoint(x, y):
+                self.card_list.insert(i, self.card_list[index])
+                cards.card_list.pop(index)
+            if self._is_vertical:
+                hitbox.y += CWIDTH
+            else:
+                hitbox.x += CWIDTH
+            i += 1
         self._dragged = False
         
 

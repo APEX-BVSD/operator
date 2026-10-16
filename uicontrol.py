@@ -51,7 +51,6 @@ class UI():
         '''
         for list in self._card_lists:
             list.process_click(x, y)
-        
                 
 
     def move_dragged(self, x, y):
