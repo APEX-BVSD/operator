@@ -1,6 +1,7 @@
 import pygame
 from settings import *
 from cardlists import *
+from player import *
 
 vertical_list: CardList = CardList(list(), 10, 10, True)
 horizontal_list: CardList = CardList(list(), 10, 500, False)
@@ -9,8 +10,9 @@ vertical_list.populate(5)
 horizontal_list.populate(5)
 
 class UI():
+    _p: Player = Player()
     _clickable_objs: list = []
-    _card_lists: list[CardList] = [horizontal_list, vertical_list]
+    _card_lists: list[CardList] = [_p.cards, _p.score_cards]
     _drawn_objs: list = []
     _dragged_obj = None
     _dragged_sprite = None
@@ -18,6 +20,9 @@ class UI():
     _dragged_list = None
     _dragged_x: int = 0
     _dragged_y: int = 0
+
+    def __init__(self, p: Player):
+        self._p = p
 
     def setter(self, reset):
         if reset:
@@ -81,7 +86,7 @@ class UI():
         self._drawn_objs.clear()
         
         for list in self._card_lists:
-            for card in list._card_list:
+            for card in list.card_list:
                 self._drawn_objs.append(card) 
 
         for obj in self._drawn_objs:

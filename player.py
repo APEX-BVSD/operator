@@ -1,23 +1,29 @@
 from cards import *
+from settings import *
+from cardlists import *
 
 class Player:
-    _cards: list = []
-    _score_cards: list = []
+    cards: CardList = CardList(list(), BOTTOM_LIST_TOP_LEFT[0], BOTTOM_LIST_TOP_LEFT[1], False)
+    score_cards: CardList = CardList(list(), SIDE_LIST_TOP_LEFT[0], SIDE_LIST_TOP_LEFT[1], True)
     _score: int = 0
 
+    """
+        Add `card` to player hand
+    """
     def add_card(self, card):
-        self._cards.append(card)
+        self.cards.card_list.append(card)
 
-    def swap_card_order(self, a: int, b: int):
-        _temp_card: Card = self._cards[a]
-        self._cards[a] = self._cards[b]
-        self._cards[b] = _temp_card
+    """
+        Add `card` to player score deck
+    """
+    def add_score_card(self, card):
+        self.score_cards.card_list.append(card)
 
     def calculate_score(self, base: int):
         self._score += base
         card_index: int = 0
         try:
-            for card in self._cards:
+            for card in self.cards.card_list:
                 try:
                     if card.meets_conditions(base, card_index):
                         card.apply(self._score)
@@ -29,17 +35,9 @@ class Player:
         except:
             print("No cards")
 
-    """
-    Optional, but it was easy to implement so I added it here. If we decide that it would be a good design decision
-        to cumulatively increase the player's total score at the end of each round, that's what this method will do.
-
-        Untested, since we haven't decided if we should use it, it's mostly here as a reminder to myself.
-
-        -Liz
-    """
     def bonus_score(self):
-        if self._score_cards != []:
-            for card in self._score_cards:
+        if self.score_cards.card_list != []:
+            for card in self.score_cards.card_list:
                 try:
                     self._score = card.apply(self._score)
                 except:

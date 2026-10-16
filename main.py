@@ -24,8 +24,11 @@ async def main() -> None:
     # set the screen dimensions
     screen: pygame.Surface = pygame.display.set_mode( (SCREEN_WIDTH, SCREEN_HEIGHT) )
 
+    # initialize Player
+    player: Player = Player()
+
     # create the UI
-    ui: UI = UI()
+    ui: UI = UI(player)
 
     # set title
     pygame.display.set_caption(GAME_TITLE)
@@ -38,8 +41,13 @@ async def main() -> None:
     running: bool = True
     game_state: str = "START_SCREEN"
     game_screen: GameScreen = GameScreen()
-    while running:
 
+    if running:
+        for _ in range(5):
+            player.add_card(random_card(1))
+            player.add_score_card(random_card(10))
+
+    while running:
         mouse_x, mouse_y = pygame.mouse.get_pos()
 
         if reset_values:
