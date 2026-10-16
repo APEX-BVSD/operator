@@ -63,6 +63,7 @@ async def main() -> None:
             if not round_initialized: 
                 base_number: int = initialize_round(player._cards)
                 round_initialized = True 
+                print("hamburg")
             game_screen.display_game_screen(screen) 
             ui.move_dragged(mouse_x, mouse_y)
             ui.draw_objects(screen)

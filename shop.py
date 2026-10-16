@@ -13,10 +13,12 @@ class Shop():
 
     def process_click(self, x, y):
         '''
-        Processes a click by checking if it is within an interactable object
+        Processes a click by checking if you clicked on a card, then removes the purchased card
 
         X: the x coordinate of the click
         Y: the y coordinate of the click
+
+        Returns: Either gamestate if the exit button is clicked, or a card if you purchase one
         '''
 
         counter: int = 0 
@@ -30,9 +32,11 @@ class Shop():
 
         if x >= self._exit_button.left and x <= self._exit_button.right and y >= self._exit_button.top and y <= self._exit_button.bottom:
             return "PLAYING"
-        return "SHOP"
 
     def initialize_shop(self):
+        '''
+        Sets initial values for the shop and generates cards to be purchased
+        '''
         counter: int = 0
         
         for card in self._available_cards:
