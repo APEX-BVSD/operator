@@ -1,6 +1,6 @@
 """
 Contains functions that implement the start screen.
-Month Year
+Month 2026 
 First Last
 First Last 
 First Last 
@@ -10,30 +10,27 @@ import pygame
 import math
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 
-animation_timer: float = 0.0
-
 def display_start_screen(screen: pygame.Surface) -> str:
-    global animation_timer
-
-    # backgrownd pulse/glow
-    pulse_intensity = int(30 + 15 * math.sin(animation_timer))
-    screen.fill((20, 24, pulse_intensity))
-    animation_timer += 0.05 
 
     # text font
-    title_font = pygame.font.Font(None, 74)
-    prompt_font = pygame.font.Font(None, 36)
+    title_font: pygame.font.Font = pygame.font.Font(None, 74)
+    prompt_font: pygame.font.Font = pygame.font.Font(None, 36)
 
     # create title text and center it
-    title_main = title_font.render("[Title]", True, (255, 215, 0))
-    title_x = SCREEN_WIDTH // 2 - title_main.get_width() // 2
-    title_y = SCREEN_HEIGHT // 3
-    screen.blit(title_main, (title_x, title_y))
+    title_box: pygame.Surface = title_font.render("Operator", True, (255, 215, 0))
+    shadow_box: pygame.Surface = title_font.render("Operator", True, (5, 0, 10))
+    title_box.set_alpha(90)
+    Prompt_box: pygame.Surface = prompt_font.render("PRESS SPACE TO START", True, (255, 215, 0))
+
+    title_x: int = SCREEN_WIDTH // 2 - title_box.get_width() // 2
+    title_y: int = SCREEN_HEIGHT // 3
+    screen.blit(title_box, (title_x, title_y))
+    screen.blit(shadow_box, (title_x + 5, title_y))
 
     # centers start prompt
-    prompt_x = SCREEN_WIDTH // 2 - prompt_text.get_width() // 2
-    prompt_y = SCREEN_HEIGHT * 2 // 3
-    screen.blit(prompt_text, (prompt_x, prompt_y))
+    prompt_x: int = SCREEN_WIDTH // 2 - Prompt_box.get_width() // 2
+    prompt_y: int = SCREEN_HEIGHT * 2 // 3
+    screen.blit(Prompt_box, (prompt_x, prompt_y))
 
 
     for event in pygame.event.get():
