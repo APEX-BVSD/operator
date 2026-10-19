@@ -11,6 +11,7 @@ class CardList:
     _dragged_index = None
     _x_offset: int = 0
     _y_offset: int = 0
+    _dragged: bool = False
 
     def process_click(self, x, y):
         """
@@ -42,28 +43,38 @@ class CardList:
         X: the x coordinate of the cursor
         Y: the y coordinate of the cursor
         """
+        if len(self._card_list) != 0:
+            if (
+                x >= self._x_offset-50
+                and x <= (len(self._card_list) + 1) * 100 - 50 + self._x_offset
+                and y <= self._card_list[0].hitbox.bottom + self._card_list[0].position[1]
+                and y >= self._card_list[0].hitbox.top + self._card_list[0].position[1]
+            ):
+                new_index: int = (x - 50 - self._x_offset) // 100 + 1
+                if list == self:
+                    if new_index > index:
+                        self._card_list.insert(new_index, self._card_list[index])
+                        list._card_list.pop(index)
 
-        if (
-            x >= self._x_offset
-            and x <= (len(self._card_list) + 1) * 100 - 50 + self._x_offset
-            and y <= self._card_list[0].hitbox.bottom + self._card_list[0].position[1]
-            and y >= self._card_list[0].hitbox.top + self._card_list[0].position[1]
-        ):
-            new_index: int = (x - 50 - self._x_offset) // 100 + 1
-            if list == self:
-                if new_index > index:
-                    self._card_list.insert(new_index, self._card_list[index])
+                    elif index == new_index:
+                        pass
+
+                    else:
+                        self._card_list.insert(new_index, self._card_list[index])
+                        list._card_list.pop(index + 1)
+                else:
+                    self._card_list.insert(new_index, list._card_list[index])
                     list._card_list.pop(index)
 
-                elif index == new_index:
-                    pass
-
-                else:
-                    self._card_list.insert(new_index, self._card_list[index])
-                    list._card_list.pop(index + 1)
-            else:
-                self._card_list.insert(new_index, list._card_list[index])
-                list._card_list.pop(index)
+        else:
+            if (
+                x >= self._x_offset-50
+                and x <= 50 + self._x_offset
+                and y <= self._y_offset + 100
+                and y >= self._y_offset
+                ):
+                    self._card_list.append(list._card_list[index])
+                    list._card_list.pop(index)
 
         self._dragged = False
 
@@ -114,29 +125,39 @@ class VerticalList(CardList):
         X: the x coordinate of the cursor
         Y: the y coordinate of the cursor
         """
+        if len(self._card_list) != 0:
+            if (
+                y > self._y_offset-50
+                and y <= (len(self._card_list) + 1) * 100 - 50 + self._y_offset
+                and x <= self._card_list[0].hitbox.right + self._card_list[0].position[0]
+                and x >= self._card_list[0].hitbox.left + self._card_list[0].position[0]
+            ):
+                new_index: int = (y - 50 - self._y_offset) // 100 + 1
+                if list == self:
+                    if new_index > index:
+                        self._card_list.insert(new_index, self._card_list[index])
+                        list._card_list.pop(index)
 
-        if (
-            y > self._y_offset
-            and y <= (len(self._card_list) + 1) * 100 - 50 + self._y_offset
-            and x <= self._card_list[0].hitbox.right + self._card_list[0].position[0]
-            and x >= self._card_list[0].hitbox.left + self._card_list[0].position[0]
-        ):
-            new_index: int = (y - 50 - self._y_offset) // 100 + 1
-            if list == self:
-                if new_index > index:
-                    self._card_list.insert(new_index, self._card_list[index])
+                    elif index == new_index:
+                        pass
+
+                    else:
+                        self._card_list.insert(new_index, self._card_list[index])
+                        list._card_list.pop(index + 1)
+                else:
+                    self._card_list.insert(new_index, list._card_list[index])
                     list._card_list.pop(index)
 
-                elif index == new_index:
-                    pass
-
-                else:
-                    self._card_list.insert(new_index, self._card_list[index])
-                    list._card_list.pop(index + 1)
-            else:
-                self._card_list.insert(new_index, list._card_list[index])
-                list._card_list.pop(index)
-
+        else:
+            if (
+                y >= self._y_offset-50
+                and y <= 50 + self._y_offset
+                and x <= self._x_offset + 100
+                and x >= self._x_offset
+                ):
+                    self._card_list.append(list._card_list[index])
+                    list._card_list.pop(index)
+                    
         self._dragged = False
 
     def set_card_position(self):

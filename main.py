@@ -91,7 +91,8 @@ async def main() -> None:
                 click_x, click_y = event.pos
                 ui.process_list_click(click_x, click_y)
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-                ui.check_list_card_movement(mouse_x, mouse_y)
+                if ui._dragged_object != None:
+                    ui.check_list_card_movement(mouse_x, mouse_y)
                 reset_values = True
 
         # render the screen
