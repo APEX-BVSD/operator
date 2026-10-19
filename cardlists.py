@@ -84,6 +84,9 @@ class CardList:
             card.position = (100 * counter + self._x_offset, self._y_offset)
             counter += 1
 
+    def cards(self):
+        return self._card_list
+
 
 class HorizontalList(CardList):
     _card_list: list[Card] = [random_card(2), random_card(5)]

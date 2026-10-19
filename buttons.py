@@ -34,7 +34,8 @@ PIX_PER_PT: float = 1.5
 #scuffed font rendering workaround
 
 class Button(TextBox):
-    _function: Callable = print
+    function: Callable
+    click_bb: Rect = pygame.Rect(0, 0, 0, 0)
 
     def __init__(
         self,
@@ -46,8 +47,9 @@ class Button(TextBox):
         font: str | None = None,
     ):
         TextBox.__init__(self, image_path, text, size, pos, font)
-        self._function = callback
+        self.function = callback
         self.size = size
+        self.click_bb = pygame.Rect(pos[0], pos[1], size[0], size[1])
         self.text = text
         self.image = pygame.transform.scale(
             pygame.image.load(image_path), (self.size[0], self.size[1])

@@ -7,6 +7,9 @@ class Player:
 
     def add_card(self, card):
         self._cards.append(card)
+    
+    def add_scoring_card(self, card):
+        self._cards.append(card)
 
     def swap_card_order(self, a: int, b: int):
         _temp_card: Card = self._cards[a]

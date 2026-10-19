@@ -16,11 +16,21 @@ from game_screen import *
 from round_logic import *
 from settings import *
 from start_screen import *
+from player import *
 
-def test() -> None:
-    print("this is a test!")
+player: Player = Player()
+buttons: list[Button] = []
+
+game_state: str = "START_SCREEN"
+# A little jank, but the easiest way of doing this
+
+def submit() -> None:
+    global game_state
+    game_state = "SCORE"
 
 async def main() -> None:
+
+    global game_state
 
     round_initialized: bool = False
     reset_values: bool = False
@@ -41,17 +51,17 @@ async def main() -> None:
 
     # MAIN GAME LOOP
     running: bool = True
-    game_state: str = "START_SCREEN"
     game_screen: GameScreen = GameScreen()
 
-    test_button: Button = Button(
-        test,
-        "assets/cardbg.png",
-        "PAUSE",
+    submit_button: Button = Button(
+        submit,
+        "assets/cardbg.png", #"assets/submit.png"
+        "",
         (100, 100),
         (0, 0),
         "assets/fonts/sambaisdead.ttf",
     )
+    buttons.append(submit_button)
 
     while running:
         mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -72,7 +82,11 @@ async def main() -> None:
             game_screen.display_game_screen(screen)
             ui.move_dragged(mouse_x, mouse_y)
             ui.draw_objects(screen)
-            screen.blit(test_button.image)
+            screen.blit(submit_button.image)
+
+        elif game_state == "SCORE":
+            for c in ui.get_lists()[0].cards():
+            
 
         elif game_state == "GAME_OVER":
             pass
@@ -87,7 +101,11 @@ async def main() -> None:
                 round_initialized = False
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 click_x, click_y = event.pos
-                ui.process_list_click(click_x, click_y)
+                for b in buttons:
+                    if b.click_bb.collidepoint(event.pos):
+                        b.function()
+                else:
+                    ui.process_list_click(click_x, click_y)
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 if ui._dragged_object != None:
                     ui.check_list_card_movement(mouse_x, mouse_y)
