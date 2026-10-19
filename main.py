@@ -17,10 +17,8 @@ from round_logic import *
 from settings import *
 from start_screen import *
 
-
 def test() -> None:
-    print("WAWAWAWAWWA")
-
+    print("this is a test!")
 
 async def main() -> None:
 
@@ -49,10 +47,10 @@ async def main() -> None:
     test_button: Button = Button(
         test,
         "assets/cardbg.png",
-        "THIS IS A TEST",
+        "PAUSE",
         (100, 100),
         (0, 0),
-        "assets/fonts/homevideo.ttf",
+        "assets/fonts/sambaisdead.ttf",
     )
 
     while running:

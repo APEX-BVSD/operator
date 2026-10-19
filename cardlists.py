@@ -35,13 +35,17 @@ class CardList:
                 pygame.Surface.set_alpha(self._dragged_sprite, 100)
             counter += 1
 
-    def check_card_movement(self, x, y, list, index):
+    def check_card_movement(self, x, y, cards, index):
         """
         Checks if cards need to be moved after a drag stops
 
         X: the x coordinate of the cursor
         Y: the y coordinate of the cursor
         """
+
+        # Fix a crash that happened when the user clicked and dragged somewhere outside of the CardList
+        if cards == None or index == None:
+            return
 
         if (
             x >= self._x_offset
@@ -50,20 +54,20 @@ class CardList:
             and y >= self._card_list[0].hitbox.top + self._card_list[0].position[1]
         ):
             new_index: int = (x - 50 - self._x_offset) // 100 + 1
-            if list == self:
+            if cards == self:
                 if new_index > index:
                     self._card_list.insert(new_index, self._card_list[index])
-                    list._card_list.pop(index)
+                    cards._card_list.pop(index)
 
                 elif index == new_index:
                     pass
 
                 else:
                     self._card_list.insert(new_index, self._card_list[index])
-                    list._card_list.pop(index + 1)
+                    cards._card_list.pop(index + 1)
             else:
-                self._card_list.insert(new_index, list._card_list[index])
-                list._card_list.pop(index)
+                self._card_list.insert(new_index, cards._card_list[index])
+                cards._card_list.pop(index)
 
         self._dragged = False
 
