@@ -1,10 +1,10 @@
 import pygame
-from objects import *
 from settings import *
+from cards import *
 
 class Shop():
 
-    _available_cards: list = [Placeholder1(), Placeholder2(), Placeholder3(), Placeholder4(), Placeholder5(), Placeholder6()]
+    _available_cards: list = []
     _cards_per_row: int = 3
     _exit_button: pygame.Rect = pygame.Rect(300,
                                             400,
@@ -37,6 +37,10 @@ class Shop():
         '''
         Sets initial values for the shop and generates cards to be purchased
         '''
+
+        for _ in range(6):
+            self._available_cards.append(random_card(5))
+
         counter: int = 0
         
         for card in self._available_cards:

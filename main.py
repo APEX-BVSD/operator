@@ -3,11 +3,17 @@ Describe your game.
 Sep 2026
 Elizabeth Posusta
 Carter Quarles
-First Last 
+First Last
 """
 
 import asyncio
+
 import pygame
+
+from buttons import *
+from cards import Card
+from game_screen import *
+from round_logic import *
 from settings import *
 from start_screen import *
 from cards import Card
@@ -15,6 +21,9 @@ from round_logic import *
 from game_screen import *
 from shop import *
 from player import *
+
+def test() -> None:
+    print("this is a test!")
 
 async def main() -> None:
 
@@ -24,7 +33,7 @@ async def main() -> None:
     pygame.init()
 
     # set the screen dimensions
-    screen: pygame.Surface = pygame.display.set_mode( (SCREEN_WIDTH, SCREEN_HEIGHT) )
+    screen: pygame.Surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
     # create the UI
     ui: UI = UI()
@@ -41,13 +50,21 @@ async def main() -> None:
     # create clock
     clock: pygame.time.Clock = pygame.time.Clock()
 
-
     # MAIN GAME LOOP
     running: bool = True
     game_state: str = "START_SCREEN"
     game_screen: GameScreen = GameScreen()
-    while running:
 
+    test_button: Button = Button(
+        test,
+        "assets/cardbg.png",
+        "PAUSE",
+        (100, 100),
+        (0, 0),
+        "assets/fonts/sambaisdead.ttf",
+    )
+
+    while running:
         mouse_x, mouse_y = pygame.mouse.get_pos()
 
         if reset_values:
@@ -67,10 +84,11 @@ async def main() -> None:
             game_screen.display_game_screen(screen) 
             ui.move_dragged(mouse_x, mouse_y)
             ui.draw_objects(screen)
+            screen.blit(test_button.image)
 
         elif game_state == "SHOP":
             shop.draw_objects(screen)
-        
+
         elif game_state == "GAME_OVER":
             pass
 
@@ -111,7 +129,6 @@ async def main() -> None:
     # when the loop breaks, shut down pygame gracefully
     print("Running loop ended.")
     pygame.quit()
-
 
 
 asyncio.run(main())
