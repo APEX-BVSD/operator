@@ -18,7 +18,7 @@ class UI:
     _dragged_x: int = 0
     _dragged_y: int = 0
 
-    def setter(self, reset):
+    def setter(self, reset: bool):
         if reset:
             self._dragged_object = None
             self._dragged_index = None
@@ -81,8 +81,8 @@ class UI:
             for card in list._card_list:
                 self._drawn_objects.append(card)
 
-        for object in self._drawn_objects:
-            screen.blit(object.image, object.position)
+        for obj in self._drawn_objects:
+            screen.blit(obj.image, obj.position)
 
         if self._dragged_object != None:
             screen.blit(self._dragged_sprite, (self._dragged_x, self._dragged_y))
