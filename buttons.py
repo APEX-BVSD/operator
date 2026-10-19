@@ -30,9 +30,11 @@ class TextBox:
             f = pygame.Font(size=42)
             self.image = f.render(self.text, True, (255, 255, 255))
 
+PIX_PER_PT: float = 1.5
+#scuffed font rendering workaround
 
 class Button(TextBox):
-    _function: Callable = print("Default button behavior")
+    _function: Callable = print
 
     def __init__(
         self,
@@ -51,9 +53,11 @@ class Button(TextBox):
             pygame.image.load(image_path), (self.size[0], self.size[1])
         )
         pygame.font.init()
+        f: pygame.Font = pygame.Font()
         try:
-            f = pygame.Font(font, size=42)
-            self.image = f.render(self.text, True, (255, 255, 255))
+            f = pygame.Font(font, size=int(self.size[0] * PIX_PER_PT / len(self.text)))
         except:
             f = pygame.Font(size=42)
-            self.image = f.render(self.text, True, (255, 255, 255))
+        _margin_w: int = (self.size[0] - f.size(self.text)[0]) // 2
+        _margin_h: int = (self.size[1] - f.size(self.text)[1]) // 2
+        self.image.blit(f.render(self.text, True, (255, 255, 255)), (_margin_w, _margin_h))
