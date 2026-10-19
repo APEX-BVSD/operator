@@ -43,6 +43,12 @@ async def main() -> None:
     # create the UI
     ui: UI = UI()
 
+    # create the shop
+    shop: Shop = Shop()
+
+    # create the plater
+    player: Player = Player()
+
     # set title
     pygame.display.set_caption(GAME_TITLE)
 
@@ -78,10 +84,10 @@ async def main() -> None:
             game_state = display_start_screen(screen)
 
         elif game_state == "PLAYING":
-            if not round_initialized:
-                base_number: int = initialize_round()
-                round_initialized = True
-            game_screen.display_game_screen(screen)
+            if not round_initialized: 
+                base_number: int = initialize_round(player._cards)
+                round_initialized = True 
+            game_screen.display_game_screen(screen) 
             ui.move_dragged(mouse_x, mouse_y)
             ui.draw_objects(screen)
             screen.blit(submit_button.image, submit_button.pos)
@@ -97,6 +103,9 @@ async def main() -> None:
 
             print(player.get_score())
             return
+
+        elif game_state == "SHOP":
+            shop.draw_objects(screen)
 
         elif game_state == "GAME_OVER":
             pass
