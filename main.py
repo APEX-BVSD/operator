@@ -56,14 +56,16 @@ async def main() -> None:
     submit_button: Button = Button(
         submit,
         "assets/cardbg.png", #"assets/submit.png"
-        "",
+        "SUBMIT",
         (100, 100),
-        (0, 0),
+        (SCREEN_WIDTH - MARGIN_X - CWIDTH, MARGIN_Y),
         "assets/fonts/sambaisdead.ttf",
     )
     buttons.append(submit_button)
 
     while running:
+        base_number: int
+
         mouse_x, mouse_y = pygame.mouse.get_pos()
 
         if reset_values:
@@ -82,11 +84,19 @@ async def main() -> None:
             game_screen.display_game_screen(screen)
             ui.move_dragged(mouse_x, mouse_y)
             ui.draw_objects(screen)
-            screen.blit(submit_button.image)
+            screen.blit(submit_button.image, submit_button.pos)
 
         elif game_state == "SCORE":
             for c in ui.get_lists()[0].cards():
-            
+                player.add_scoring_card(c)
+            for c in ui.get_lists()[0].cards():
+                player.add_card(c)
+
+            player.calculate_score(base_number)
+            player.bonus_score()
+
+            print(player.get_score())
+            return
 
         elif game_state == "GAME_OVER":
             pass

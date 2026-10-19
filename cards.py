@@ -8,11 +8,12 @@ First Last
 
 import random
 from enum import IntEnum
+from buttons import TextBox
 
 import pygame
 
 CWIDTH: int = 100
-
+PIX_PER_PT: float = 1.5
 
 class PossibleCondition(IntEnum):
     IS_NTH = 1
@@ -51,19 +52,15 @@ class Condition:
 
 
 class Card:
-    _value: int = 0
-    _operation: str = "ADD"
-    _condition: Condition = Condition()
-    hitbox: pygame.Rect = pygame.Rect(0, 0, 100, 100)
+    hitbox: pygame.Rect = pygame.Rect(0, 0, CWIDTH, CWIDTH)
     position: tuple = (0, 0)
-    image: pygame.Surface = pygame.transform.scale(
-        pygame.image.load("assets/cardbg.png"), (CWIDTH, CWIDTH)
-    )
 
     def __init__(self, v: int, o: str, c: Condition):
         self._value = v
         self._operation = o
         self._condition = c
+        self._t = TextBox("assets/cardbg.png", self._operation + " " + str(self._value), (CWIDTH, CWIDTH), (0, 0), "assets/fonts/Neuropol.otf")
+        self.image = self._t.image
 
     def apply(self, num: int):
         match self._operation:
@@ -99,6 +96,8 @@ def random_card(difficulty: int) -> Card:
             random.random() * 10 * difficulty / 2
         )  # Yet another arbitrary threshold that needs logic.
         v = round(v, 1)
+        if v == 0:
+            v = 1
     else:
         v: int = random.randint(
             0, 5 + difficulty * 2
