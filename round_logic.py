@@ -5,8 +5,6 @@ from game_screen import *
 from uicontrol import *
 
 random_card_amount: int = 2
-CARD_IDS: dict = {1: random_card(15), 2: random_card(15)}
-cards: list = []
 base_number: int = -1
 
 def initialize_round(player_cards):
@@ -17,8 +15,12 @@ def initialize_round(player_cards):
     for card in player_cards:
         vertical_list._card_list.append(card)
 
+    horizontal_list._card_list.clear()
+
     for _ in range(random_card_amount):
-        cards.append(CARD_IDS[random.randint(1,len(CARD_IDS))])
+        horizontal_list._card_list.append(random_card(5))
+
+    
     number:int = random.randint(1,100) # Maybe have this change as the game goes on?
     GameScreen.current_number = number
     return number
@@ -30,6 +32,6 @@ def run_round_math(number):
     
     final_number: int = number
 
-    for card in cards:
+    for card in horizontal_list._card_list:
         final_number = card.apply(final_number)
     print(final_number)

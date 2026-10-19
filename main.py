@@ -80,7 +80,6 @@ async def main() -> None:
             if not round_initialized: 
                 base_number: int = initialize_round(player._cards)
                 round_initialized = True 
-                print("hamburg")
             game_screen.display_game_screen(screen) 
             ui.move_dragged(mouse_x, mouse_y)
             ui.draw_objects(screen)
@@ -107,7 +106,8 @@ async def main() -> None:
                     click_x, click_y = event.pos
                     ui.process_list_click(click_x,click_y)
                 if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-                    ui.check_list_card_movement(mouse_x, mouse_y)
+                    if ui._dragged_object != None:
+                        ui.check_list_card_movement(mouse_x, mouse_y)
                     reset_values = True
             elif game_state == "SHOP":
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:

@@ -82,7 +82,6 @@ class UI:
                 self._drawn_objects.append(card)
 
         for obj in self._drawn_objects:
-            print(obj)
             screen.blit(obj.image, obj.position)
 
         if self._dragged_object != None:

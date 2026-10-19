@@ -37,6 +37,7 @@ class Shop():
         '''
         Sets initial values for the shop and generates cards to be purchased
         '''
+        self._available_cards.clear()
 
         for _ in range(6):
             self._available_cards.append(random_card(5))
