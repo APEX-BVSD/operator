@@ -1,10 +1,16 @@
 from cards import *
 
 class Player:
-    _cards: list = []
-    _score_cards: list = []
-    _score: int = 0
     game_state: str = "START_SCREEN"
+
+    def __init__(self):
+        self._cards: list[Card] = []
+        #self._score_cards: list[Card] = []
+        self._score: int = 0
+        # for _ in range(5):
+        #     self._cards.append(random_card(0))
+        # for _ in range(5):
+        #     self._score_cards.append(random_card(0))
 
     def add_card(self, card):
         self._cards.append(card)
@@ -24,7 +30,7 @@ class Player:
             for card in self._cards:
                 try:
                     if card.meets_conditions(base, card_index):
-                        base += card.apply(base)
+                        base = card.apply(base)
                     else:
                         pass
                 except:
@@ -51,3 +57,9 @@ class Player:
 
     def get_score(self):
         return self._score
+
+    def get_cards(self) -> list[Card]:
+        return self._cards
+
+    def get_score_cards(self) -> list[Card]:
+        return self._score_cards
