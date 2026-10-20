@@ -33,12 +33,16 @@ class GameScreen:
             )
         )
 
-        font: pygame.font.Font = pygame.font.Font(size=48)
-        text_box: pygame.Surface = font.render(str(self.current_number), True, "white")
+        base_font: pygame.font.Font = pygame.font.Font(
+            "assets/fonts/02.10ITA.TTF", size=128
+        )
+        text_box: pygame.Surface = base_font.render(
+            str(self.current_number), True, "white"
+        )
         screen.blit(
             text_box,
             (
                 screen.get_width() // 2 - text_box.get_width() // 2,
-                screen.get_height() // 2,
+                screen.get_height() // 2 - text_box.get_height() // 2,
             ),
         )

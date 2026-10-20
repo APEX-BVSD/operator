@@ -13,10 +13,10 @@ import pygame
 from buttons import *
 from cards import Card
 from game_screen import *
+from player import *
 from round_logic import *
 from settings import *
 from start_screen import *
-from player import *
 
 player: Player = Player()
 buttons: list[Button] = []
@@ -24,9 +24,11 @@ buttons: list[Button] = []
 game_state: str = "START_SCREEN"
 # A little jank, but the easiest way of doing this
 
+
 def submit() -> None:
     global game_state
     game_state = "SCORE"
+
 
 async def main() -> None:
 
@@ -44,7 +46,7 @@ async def main() -> None:
     ui: UI = UI()
 
     # create the shop
-    shop: Shop = Shop()
+    # shop: Shop = Shop()
 
     # create the plater
     player: Player = Player()
@@ -61,8 +63,8 @@ async def main() -> None:
 
     submit_button: Button = Button(
         submit,
-        "assets/cardbg.png", #"assets/submit.png"
-        "SUBMIT",
+        "assets/submit.png",  # "assets/submit.png"
+        "",
         (100, 100),
         (SCREEN_WIDTH - MARGIN_X - CWIDTH, MARGIN_Y),
         "assets/fonts/sambaisdead.ttf",
@@ -84,10 +86,10 @@ async def main() -> None:
             game_state = display_start_screen(screen)
 
         elif game_state == "PLAYING":
-            if not round_initialized: 
+            if not round_initialized:
                 base_number: int = initialize_round(player._cards)
-                round_initialized = True 
-            game_screen.display_game_screen(screen) 
+                round_initialized = True
+            game_screen.display_game_screen(screen)
             ui.move_dragged(mouse_x, mouse_y)
             ui.draw_objects(screen)
             screen.blit(submit_button.image, submit_button.pos)
