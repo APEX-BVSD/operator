@@ -25,16 +25,16 @@ class TextBox:
         pygame.font.init()
         f: Font = pygame.Font()
 
-        try:
-            f = pygame.Font(font, size=int(self.size[0] / len(self.text)))
-        except:
-            f = pygame.Font(size=42)
+
         _margin_w: int = (self.size[0] - f.size(self.text)[0]) // 2
         _margin_h: int = (self.size[1] - f.size(self.text)[1]) // 2
-        self.image.blit(f.render(self.text, True, (255, 255, 255)), (_margin_w, _margin_h))
 
-PIX_PER_PT: float = 1.5
-#scuffed font rendering workaround
+        try:
+            f = pygame.Font(font, size=int((self.size[0] - _margin_w)/ len(self.text)))
+        except:
+            f = pygame.Font(size=42)
+        self.image.blit(f.render(self.text, True, (255, 255, 255)), (_margin_w, _margin_h)) # FIXME: uncentered
+
 
 class Button(TextBox):
     function: Callable

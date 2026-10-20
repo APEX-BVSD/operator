@@ -23,13 +23,13 @@ class Player:
         self._cards[b] = _temp_card
 
     def calculate_score(self, base: int):
-        self._score += base
         card_index: int = 0
         try:
             for card in self._cards:
                 try:
-                    if card.meets_conditions(base, card_index):
-                        base = card.apply(base)
+                    if True or card.meets_conditions(base, card_index):
+                        base = card.apply(int(base))
+                        print(base, card._operation, card.get_number())
                     else:
                         pass
                 except:
@@ -37,6 +37,7 @@ class Player:
                 card_index += 1
         except:
             print("No cards")
+        self._score += base
 
     """
     Optional, but it was easy to implement so I added it here. If we decide that it would be a good design decision
@@ -59,6 +60,9 @@ class Player:
 
     def get_cards(self) -> list[Card]:
         return self._cards
+
+    def set_cards(self, cards: list[Card]) -> None:
+        self._cards = cards
 
     def get_score_cards(self) -> list[Card]:
         return self._score_cards
