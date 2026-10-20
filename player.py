@@ -8,6 +8,9 @@ class Player:
     def add_card(self, card):
         self._cards.append(card)
 
+    def add_scoring_card(self, card):
+        self._score_cards.append(card)
+
     def swap_card_order(self, a: int, b: int):
         _temp_card: Card = self._cards[a]
         self._cards[a] = self._cards[b]
@@ -20,7 +23,7 @@ class Player:
             for card in self._cards:
                 try:
                     if card.meets_conditions(base, card_index):
-                        card.apply(self._score)
+                        base += card.apply(base)
                     else:
                         pass
                 except:
@@ -44,6 +47,6 @@ class Player:
                     self._score = card.apply(self._score)
                 except:
                     print("invalid card/type error 2")
-    
+
     def get_score(self):
         return self._score

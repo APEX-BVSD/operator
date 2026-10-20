@@ -86,3 +86,6 @@ class UI:
 
         if self._dragged_object != None:
             screen.blit(self._dragged_sprite, (self._dragged_x, self._dragged_y))
+
+    def get_lists(self) -> list[CardList]:
+        return self._card_lists

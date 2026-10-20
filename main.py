@@ -13,19 +13,26 @@ import pygame
 from buttons import *
 from cards import Card
 from game_screen import *
+from player import *
 from round_logic import *
 from settings import *
 from start_screen import *
-from cards import Card
-from round_logic import *
-from game_screen import *
-from shop import *
-from player import *
 
-def test() -> None:
-    print("this is a test!")
+player: Player = Player()
+buttons: list[Button] = []
+
+game_state: str = "START_SCREEN"
+# A little jank, but the easiest way of doing this
+
+
+def submit() -> None:
+    global game_state
+    game_state = "SCORE"
+
 
 async def main() -> None:
+
+    global game_state
 
     round_initialized: bool = False
     reset_values: bool = False
@@ -39,7 +46,7 @@ async def main() -> None:
     ui: UI = UI()
 
     # create the shop
-    shop: Shop = Shop()
+    # shop: Shop = Shop()
 
     # create the plater
     player: Player = Player()
@@ -52,19 +59,21 @@ async def main() -> None:
 
     # MAIN GAME LOOP
     running: bool = True
-    game_state: str = "START_SCREEN"
     game_screen: GameScreen = GameScreen()
 
-    test_button: Button = Button(
-        test,
-        "assets/cardbg.png",
-        "PAUSE",
+    submit_button: Button = Button(
+        submit,
+        "assets/submit.png",  # "assets/submit.png"
+        "",
         (100, 100),
-        (0, 0),
+        (SCREEN_WIDTH - MARGIN_X - CWIDTH, MARGIN_Y),
         "assets/fonts/sambaisdead.ttf",
     )
+    buttons.append(submit_button)
 
     while running:
+        base_number: int
+
         mouse_x, mouse_y = pygame.mouse.get_pos()
 
         if reset_values:
@@ -77,13 +86,25 @@ async def main() -> None:
             game_state = display_start_screen(screen)
 
         elif game_state == "PLAYING":
-            if not round_initialized: 
+            if not round_initialized:
                 base_number: int = initialize_round(player._cards)
-                round_initialized = True 
-            game_screen.display_game_screen(screen) 
+                round_initialized = True
+            game_screen.display_game_screen(screen)
             ui.move_dragged(mouse_x, mouse_y)
             ui.draw_objects(screen)
-            screen.blit(test_button.image)
+            screen.blit(submit_button.image, submit_button.pos)
+
+        elif game_state == "SCORE":
+            for c in ui.get_lists()[0].cards():
+                player.add_scoring_card(c)
+            for c in ui.get_lists()[0].cards():
+                player.add_card(c)
+
+            player.calculate_score(base_number)
+            player.bonus_score()
+
+            print(player.get_score())
+            return
 
         elif game_state == "SHOP":
             shop.draw_objects(screen)
@@ -96,28 +117,21 @@ async def main() -> None:
             running = False
 
         for event in pygame.event.get():
-            if game_state == "PLAYING":
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_2:
-                    run_round_math(base_number)
-                    round_initialized = False
-                    game_state = "SHOP"
-                    shop.initialize_shop()
-                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                    click_x, click_y = event.pos
-                    ui.process_list_click(click_x,click_y)
-                if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-                    if ui._dragged_object != None:
-                        ui.check_list_card_movement(mouse_x, mouse_y)
-                    reset_values = True
-            elif game_state == "SHOP":
-                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                    click_x, click_y = event.pos
-                    shop_output = shop.process_click(click_x, click_y)
-                    if isinstance(shop_output, str):
-                        game_state = shop_output
-                    else:
-                        player._cards.append(shop_output) 
-        
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_2:
+                run_round_math(base_number)
+                round_initialized = False
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                click_x, click_y = event.pos
+                for b in buttons:
+                    if b.click_bb.collidepoint(event.pos):
+                        b.function()
+                else:
+                    ui.process_list_click(click_x, click_y)
+            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                if ui._dragged_object != None:
+                    ui.check_list_card_movement(mouse_x, mouse_y)
+                reset_values = True
+
         # render the screen
         pygame.display.flip()
         # advance the clock
