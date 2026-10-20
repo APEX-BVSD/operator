@@ -20,6 +20,7 @@ from start_screen import *
 from shop import *
 
 player: Player = Player()
+shop: Shop = Shop()
 buttons: list[Button] = []
 
 game_state: str = "START_SCREEN"
