@@ -4,6 +4,7 @@ class Player:
     _cards: list = []
     _score_cards: list = []
     _score: int = 0
+    game_state: str = "START_SCREEN"
 
     def add_card(self, card):
         self._cards.append(card)
