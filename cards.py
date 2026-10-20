@@ -61,6 +61,7 @@ class Card:
         self._condition = c
         self._t = TextBox("assets/cardbg.png", self._operation + " " + str(self._value), (CWIDTH, CWIDTH), (0, 0), "assets/fonts/Neuropol.otf")
         self.image = self._t.image
+        self.cost = 50 # Make sure to actually set this somewhere
 
     def apply(self, num: int):
         match self._operation:

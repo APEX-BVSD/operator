@@ -11,7 +11,7 @@ class Shop():
                                             200, 100
     )
 
-    def process_click(self, x, y):
+    def process_click(self, x: int, y: int, player):
         '''
         Processes a click by checking if you clicked on a card, then removes the purchased card
 
@@ -25,9 +25,14 @@ class Shop():
 
         for obj in self._available_cards:
             if x >= obj.hitbox.left + obj.position[0] and x <= obj.hitbox.right + obj.position[0] and y >= obj.hitbox.top + obj.position[1] and y <= obj.hitbox.bottom + obj.position[1]:
-                bought_card = self._available_cards[counter]
-                self._available_cards.pop(counter)
-                return bought_card
+                if player.get_score() >= obj.cost:
+                    player.set_score(player.get_score() - obj.cost)
+                    print(player.get_score())
+                    bought_card = self._available_cards[counter]
+                    self._available_cards.pop(counter)
+                    return bought_card
+                else:
+                    return
             counter += 1
 
         if x >= self._exit_button.left and x <= self._exit_button.right and y >= self._exit_button.top and y <= self._exit_button.bottom:

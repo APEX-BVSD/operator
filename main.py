@@ -123,7 +123,7 @@ async def main() -> None:
                     ui.process_list_click(click_x, click_y)
 
                 if player.game_state == "SHOP":
-                    shop_output = shop.process_click(click_x, click_y)
+                    shop_output = shop.process_click(click_x, click_y, player)
 
                     if shop_output == "PLAYING":
                         player.game_state = "PLAYING"
