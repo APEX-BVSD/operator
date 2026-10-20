@@ -25,13 +25,13 @@ class GameScreen:
 
         """
 
-        # draw the screen
-        screen.blit(
-            pygame.transform.scale(
+        bg = pygame.transform.scale(
                 pygame.image.load("assets/background.png"),
                 (SCREEN_WIDTH, SCREEN_HEIGHT),
-            )
-        )
+                )
+
+        # draw the screen
+        screen.blit(bg)
 
         base_font: pygame.font.Font = pygame.font.Font(
             "assets/fonts/02.10ITA.TTF", size=128

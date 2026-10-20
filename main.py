@@ -89,7 +89,7 @@ async def main() -> None:
 
         elif game_state == "PLAYING":
             if not round_initialized:
-                base_number: int = initialize_round(player._cards)
+                base_number: int = initialize_round(player.get_cards(), player.get_score_cards())
                 round_initialized = True
             game_screen.display_game_screen(screen)
             ui.move_dragged(mouse_x, mouse_y)
@@ -97,13 +97,13 @@ async def main() -> None:
             screen.blit(submit_button.image, submit_button.pos)
 
         elif game_state == "SCORE":
-            for c in ui.get_lists()[0].cards():
-                player.add_scoring_card(c)
-            for c in ui.get_lists()[0].cards():
+        #     for c in ui.get_lists()[0].cards():
+        #         player.add_scoring_card(c)
+            for c in ui.get_lists()[1].cards():
                 player.add_card(c)
 
             player.calculate_score(base_number)
-            player.bonus_score()
+            # player.bonus_score()
 
             print(player.get_score())
 
