@@ -17,8 +17,10 @@ from player import *
 from round_logic import *
 from settings import *
 from start_screen import *
+from shop import *
 
 player: Player = Player()
+shop: Shop = Shop()
 buttons: list[Button] = []
 
 game_state: str = "START_SCREEN"
@@ -104,7 +106,10 @@ async def main() -> None:
             player.bonus_score()
 
             print(player.get_score())
-            return
+
+
+
+            game_state = "SHOP"
 
         elif game_state == "SHOP":
             shop.draw_objects(screen)
