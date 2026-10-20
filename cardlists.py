@@ -89,13 +89,13 @@ class CardList:
 
 
 class HorizontalList(CardList):
-    _card_list: list[Card] = [random_card(2), random_card(5)]
+    _card_list: list[Card]
     _x_offset: int = 200
     _y_offset: int = 400
 
 
 class VerticalList(CardList):
-    _card_list: list = [random_card(3), random_card(4)]
+    _card_list: list = [random_card(0), random_card(0)]
 
     def process_click(self, x, y):
         """
@@ -160,7 +160,7 @@ class VerticalList(CardList):
                 ):
                     self._card_list.append(list._card_list[index])
                     list._card_list.pop(index)
-                    
+
         self._dragged = False
 
     def set_card_position(self):
