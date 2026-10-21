@@ -37,12 +37,12 @@ PIX_PER_PT: float = 1.5
 #scuffed font rendering workaround
 
 class Button(TextBox):
-    function: Callable
+    function: abc.Callable
     click_bb: pygame.Rect = pygame.Rect(0, 0, 0, 0)
 
     def __init__(
         self,
-        callback: Callable,
+        callback: abc.Callable,
         image_path: str,
         text: str,
         size: tuple[int, int],
