@@ -4,7 +4,7 @@ import pygame
 
 
 class TextBox:
-    image: Surface = None
+    image: pygame.Surface = None
     text: str = ""
     size: tuple[int, int] = (0, 0)
     pos: tuple[int, int] = (0, 0)
@@ -23,7 +23,7 @@ class TextBox:
             pygame.image.load(image_path), (self.size[0], self.size[1])
         )
         pygame.font.init()
-        f: Font = pygame.Font()
+        f: pygame.Font = pygame.Font()
 
         try:
             f = pygame.Font(font, size=int(self.size[0] / len(self.text)))
@@ -38,7 +38,7 @@ PIX_PER_PT: float = 1.5
 
 class Button(TextBox):
     function: Callable
-    click_bb: Rect = pygame.Rect(0, 0, 0, 0)
+    click_bb: pygame.Rect = pygame.Rect(0, 0, 0, 0)
 
     def __init__(
         self,

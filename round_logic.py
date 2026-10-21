@@ -7,14 +7,13 @@ from uicontrol import *
 random_card_amount: int = 2
 base_number: int = -1
 
-def initialize_round(cards: list[Card], score_cards: list[Card]):
+def initialize_round(cards: list[Card]):
     '''
     Assigns starting values and cards to the round
     '''
-    vertical_list._card_list.clear()
-    for card in score_cards:
+    vertical_list.clear_cards()
+    for card in cards:
         vertical_list._card_list.append(card)
-
 
     horizontal_list._card_list.clear()
     # for card in cards:

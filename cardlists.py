@@ -87,6 +87,8 @@ class CardList:
     def cards(self):
         return self._card_list
 
+    def clear_cards(self):
+        self._card_list.clear()
 
 class HorizontalList(CardList):
     _card_list: list[Card]
