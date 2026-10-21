@@ -54,9 +54,12 @@ class Condition:
 class Card:
     hitbox: pygame.Rect = pygame.Rect(0, 0, CWIDTH, CWIDTH)
     position: tuple = (0, 0)
+    _value: int
 
     def __init__(self, v: int, o: str, c: Condition):
         self._value = v
+        if self._value == 0:
+            self._value = 1
         self._operation = o
         self._condition = c
         self._t = TextBox("assets/cardbg.png", self._operation + " " + str(self._value), (CWIDTH, CWIDTH), (0, 0), "assets/fonts/Neuropol.otf")

@@ -17,6 +17,7 @@ from player import *
 from round_logic import *
 from settings import *
 from start_screen import *
+from uicontrol import *
 from shop import *
 
 player: Player = Player()
@@ -25,6 +26,7 @@ buttons: list[Button] = []
 
 def submit(p: Player) -> None:
     p.game_state = "SCORE"
+    
 
 async def main() -> None:
 
@@ -65,6 +67,8 @@ async def main() -> None:
     )
     buttons.append(submit_button)
 
+    round_num: int = 0
+
     while running:
         base_number: int
 
@@ -81,7 +85,7 @@ async def main() -> None:
 
         elif player.game_state == "PLAYING":
             if not round_initialized:
-                base_number: int = initialize_round(player.get_cards())
+                base_number: int = initialize_round(player.get_cards(), round_num)
                 round_initialized = True
             game_screen.display_game_screen(screen)
             ui.move_dragged(mouse_x, mouse_y)
@@ -89,11 +93,9 @@ async def main() -> None:
             screen.blit(submit_button.image, submit_button.pos)
 
         elif player.game_state == "SCORE":
+            player.set_cards(horizontal_list.cards())
         #     for c in ui.get_lists()[0].cards():
         #         player.add_scoring_card(c)
-        #    for c in ui.get_lists()[1].cards():
-        #        player.add_card(c)
-
             player.calculate_score(base_number)
             # player.bonus_score()
 
@@ -101,6 +103,7 @@ async def main() -> None:
 
 
             shop.initialize_shop()
+            round_num += 1
             player.game_state = "SHOP"
 
         elif player.game_state == "SHOP":

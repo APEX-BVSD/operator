@@ -7,13 +7,11 @@ from uicontrol import *
 random_card_amount: int = 2
 base_number: int = -1
 
-def initialize_round(cards: list[Card]):
+def initialize_round(cards: list[Card], roundnum: int):
     '''
     Assigns starting values and cards to the round
     '''
-    vertical_list.clear_cards()
-    for card in cards:
-        vertical_list._card_list.append(card)
+    vertical_list._card_list = cards
 
     horizontal_list._card_list.clear()
     # for card in cards:
@@ -22,7 +20,7 @@ def initialize_round(cards: list[Card]):
     # horizontal_list._card_list.clear()
 
     for _ in range(random_card_amount):
-         horizontal_list._card_list.append(random_card(5))
+         horizontal_list._card_list.append(random_card(roundnum))
 
 
     number:int = random.randint(1,100) # Maybe have this change as the game goes on?
