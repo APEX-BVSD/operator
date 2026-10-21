@@ -26,6 +26,7 @@ buttons: list[Button] = []
 
 def submit(p: Player) -> None:
     p.game_state = "SCORE"
+    
 
 async def main() -> None:
 
@@ -82,8 +83,7 @@ async def main() -> None:
         if player.game_state == "START_SCREEN":
             player.game_state = display_start_screen(screen)
 
-        elif game_state == "PLAYING":
-            round_num += 1
+        elif player.game_state == "PLAYING":
             if not round_initialized:
                 base_number: int = initialize_round(player.get_cards(), round_num)
                 round_initialized = True
@@ -92,7 +92,7 @@ async def main() -> None:
             ui.draw_objects(screen)
             screen.blit(submit_button.image, submit_button.pos)
 
-        elif game_state == "SCORE":
+        elif player.game_state == "SCORE":
             player.set_cards(horizontal_list.cards())
         #     for c in ui.get_lists()[0].cards():
         #         player.add_scoring_card(c)
@@ -103,6 +103,7 @@ async def main() -> None:
 
 
             shop.initialize_shop()
+            round_num += 1
             player.game_state = "SHOP"
 
         elif player.game_state == "SHOP":
