@@ -24,18 +24,10 @@ player: Player = Player()
 shop: Shop = Shop()
 buttons: list[Button] = []
 
-game_state: str = "START_SCREEN"
-# A little jank, but the easiest way of doing this
-
-
-def submit() -> None:
-    global game_state
-    game_state = "SCORE"
-
+def submit(p: Player) -> None:
+    p.game_state = "SCORE"
 
 async def main() -> None:
-
-    global game_state
 
     round_initialized: bool = False
     reset_values: bool = False
@@ -87,8 +79,8 @@ async def main() -> None:
         else:
             ui.setter(False)
 
-        if game_state == "START_SCREEN":
-            game_state = display_start_screen(screen)
+        if player.game_state == "START_SCREEN":
+            player.game_state = display_start_screen(screen)
 
         elif game_state == "PLAYING":
             round_num += 1
@@ -109,29 +101,39 @@ async def main() -> None:
 
             print(player.get_score())
 
-            game_state = "SHOP"
 
-        elif game_state == "SHOP":
+            shop.initialize_shop()
+            player.game_state = "SHOP"
+
+        elif player.game_state == "SHOP":
             shop.draw_objects(screen)
 
-        elif game_state == "GAME_OVER":
+        elif player.game_state == "GAME_OVER":
             pass
 
         else:
-            print(f"Invalid game state: {game_state}")
+            print(f"Invalid game state: {player.game_state}")
             running = False
 
         for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_2:
-                run_round_math(base_number)
-                round_initialized = False
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 click_x, click_y = event.pos
                 for b in buttons:
                     if b.click_bb.collidepoint(event.pos):
-                        b.function()
-                else:
+                        b.function(player)
+                if player.game_state == "PLAYING":
                     ui.process_list_click(click_x, click_y)
+
+                if player.game_state == "SHOP":
+                    shop_output = shop.process_click(click_x, click_y, player)
+
+                    if shop_output == "PLAYING":
+                        player.game_state = "PLAYING"
+                        round_initialized = False
+
+                    elif isinstance(shop_output, Card):
+                        player.add_card(shop_output)
+                    
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 if ui._dragged_object != None:
                     ui.check_list_card_movement(mouse_x, mouse_y)

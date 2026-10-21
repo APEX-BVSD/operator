@@ -1,15 +1,16 @@
 from cards import *
 
 class Player:
+    game_state: str = "START_SCREEN"
 
     def __init__(self):
         self._cards: list[Card] = []
-        self._score_cards: list[Card] = []
+        #self._score_cards: list[Card] = []
         self._score: int = 0
-        for _ in range(5):
-            self._cards.append(random_card(0))
-        for _ in range(5):
-            self._score_cards.append(random_card(0))
+        # for _ in range(5):
+        #     self._cards.append(random_card(0))
+        # for _ in range(5):
+        #     self._score_cards.append(random_card(0))
 
     def add_card(self, card):
         self._cards.append(card)
@@ -66,3 +67,6 @@ class Player:
 
     def get_score_cards(self) -> list[Card]:
         return self._score_cards
+
+    def set_score(self, score):
+        self._score = score
