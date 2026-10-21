@@ -28,7 +28,7 @@ class Player:
         try:
             for card in self._cards:
                 try:
-                    if True or card.meets_conditions(base, card_index):
+                    if card.meets_conditions(base, card_index):
                         base = card.apply(int(base))
                         print(base, card._operation, card.get_number())
                     else:
