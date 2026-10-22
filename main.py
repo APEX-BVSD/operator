@@ -96,7 +96,7 @@ async def main() -> None:
         #    player.set_cards(horizontal_list.cards())
         #     for c in ui.get_lists()[0].cards():
         #         player.add_scoring_card(c)
-            player.calculate_score(base_number)
+            player.calculate_score(base_number, horizontal_list._card_list)
             # player.bonus_score()
 
             print(player.get_score())
