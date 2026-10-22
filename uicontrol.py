@@ -77,8 +77,8 @@ class UI:
         """
         self._drawn_objects.clear()
 
-        for list in self._card_lists:
-            for card in list._card_list:
+        for lst in self._card_lists:
+            for card in lst._card_list:
                 self._drawn_objects.append(card)
 
         for obj in self._drawn_objects:

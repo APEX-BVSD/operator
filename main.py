@@ -93,7 +93,7 @@ async def main() -> None:
             screen.blit(submit_button.image, submit_button.pos)
 
         elif player.game_state == "SCORE":
-            player.set_cards(horizontal_list.cards())
+        #    player.set_cards(horizontal_list.cards())
         #     for c in ui.get_lists()[0].cards():
         #         player.add_scoring_card(c)
             player.calculate_score(base_number)
@@ -117,6 +117,9 @@ async def main() -> None:
             running = False
 
         for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 click_x, click_y = event.pos
                 for b in buttons:
@@ -139,6 +142,8 @@ async def main() -> None:
                 if ui._dragged_object != None:
                     ui.check_list_card_movement(mouse_x, mouse_y)
                 reset_values = True
+
+            
 
         # render the screen
         pygame.display.flip()
