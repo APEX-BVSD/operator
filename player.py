@@ -1,12 +1,14 @@
 from cards import *
 
+
 class Player:
     game_state: str = "START_SCREEN"
 
     def __init__(self):
+        self._score = 0
         self._cards: list[Card] = []
-        #self._score_cards: list[Card] = []
-        self._score: int = 0
+        # self._score_cards: list[Card] = []
+        self._score_cards: int = 0
         # for _ in range(5):
         #     self._cards.append(random_card(0))
         # for _ in range(5):
@@ -48,6 +50,7 @@ class Player:
 
         -Liz
     """
+
     def bonus_score(self):
         if self._score_cards != []:
             for card in self._score_cards:
