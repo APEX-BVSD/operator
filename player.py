@@ -25,10 +25,10 @@ class Player:
         self._cards[a] = self._cards[b]
         self._cards[b] = _temp_card
 
-    def calculate_score(self, base: int):
+    def calculate_score(self, base: int, cards):
         card_index: int = 0
         try:
-            for card in self._cards:
+            for card in cards:
                 try:
                     if card.meets_conditions(base, card_index):
                         base = card.apply(int(base))
