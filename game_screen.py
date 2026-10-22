@@ -9,14 +9,30 @@ First Last
 
 import pygame
 from pygame import font
+from pygame.constants import SRCALPHA
+from pygame.surface import Surface
 
-from settings import SCREEN_HEIGHT, SCREEN_WIDTH
+from buttons import TextBox
+from player import Player
+from settings import MARGIN_X, MARGIN_Y, SCREEN_HEIGHT, SCREEN_WIDTH
+
+
+def display_score(p: Player):
+    score_display: TextBox = TextBox(
+        Surface((SCREEN_WIDTH, SCREEN_HEIGHT), SRCALPHA),
+        str(p.get_score()),
+        (2 * SCREEN_WIDTH // 3, SCREEN_HEIGHT // 10),
+        (0, 0),
+        "assets/fonts/homevideo.ttf",
+        True,
+    )
+    return score_display.image
 
 
 class GameScreen:
     current_number: int = -1
 
-    def display_game_screen(self, screen: pygame.Surface):
+    def display_game_screen(self, screen: pygame.Surface, player: Player):
         """
         Displays the game screen.
 
@@ -26,9 +42,17 @@ class GameScreen:
         """
 
         bg = pygame.transform.scale(
-                pygame.image.load("assets/background.png"),
-                (SCREEN_WIDTH, SCREEN_HEIGHT),
-                )
+            pygame.image.load("assets/background.png"),
+            (SCREEN_WIDTH, SCREEN_HEIGHT),
+        )
+
+        bg.blit(
+            pygame.transform.scale(
+                pygame.image.load("assets/bg_frame.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)
+            )
+        )
+
+        bg.blit(display_score(player))
 
         # draw the screen
         screen.blit(bg)

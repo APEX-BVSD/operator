@@ -4,42 +4,56 @@ import pygame
 
 
 class TextBox:
-    image: pygame.Surface = None
-    text: str = ""
-    size: tuple[int, int] = (0, 0)
-    pos: tuple[int, int] = (0, 0)
-
     def __init__(
         self,
-        image_path: str,
+        image_path: str | pygame.Surface,
         text: str,
         size: tuple[int, int],
         pos: tuple[int, int],
         font: str,
+        ljustify: bool | None = None,
     ):
         self.size = size
         self.text = text
-        self.image = pygame.transform.scale(
-            pygame.image.load(image_path), (self.size[0], self.size[1])
-        )
+        self.image: pygame.Surface
+        if type(image_path) == str:
+            self.image = pygame.transform.scale(
+                pygame.image.load(image_path), (self.size[0], self.size[1])
+            )
+        elif type(image_path) == pygame.Surface:
+            self.image = image_path
+        self.pos = pos
         pygame.font.init()
-        f: pygame.Font = pygame.Font()
+        self.f: pygame.Font = pygame.Font()
 
+        self._margin_w: int = (self.size[0] - self.f.size(self.text)[0]) // 4
+        self._margin_h: int = 4 * ((self.size[1] - self.f.size(self.text)[1]) // 8)
 
-        _margin_w: int = (self.size[0] - f.size(self.text)[0]) // 2
-        _margin_h: int = (self.size[1] - f.size(self.text)[1]) // 2
+        if ljustify:
+            self._margin_w = self.f.size(self.text[0])[0]
+            self._margin_h = self._margin_w
 
         try:
-            f = pygame.Font(font, size=int((self.size[0] - _margin_w)/ len(self.text)))
+            self.f = pygame.Font(
+                font, size=int((self.size[0] - self._margin_w) / len(self.text))
+            )
+            if ljustify:
+                self.f = pygame.Font(font, size=self.size[1] - self._margin_h)
         except:
-            f = pygame.Font(size=42)
-        self.image.blit(f.render(self.text, True, (255, 255, 255)), (_margin_w, _margin_h)) # FIXME: uncentered
+            self.f = pygame.Font(size=42)
+
+        self.image.blit(
+            self.f.render(self.text, True, (255, 255, 255)),
+            pygame.Rect(
+                self._margin_w,
+                self._margin_h,
+                self.f.size(self.text)[0],
+                self.f.size(self.text)[1],
+            ),
+        )  # FIXME: uncentered
 
 
 class Button(TextBox):
-    function: abc.Callable
-    click_bb: pygame.Rect = pygame.Rect(0, 0, 0, 0)
-
     def __init__(
         self,
         callback: abc.Callable,

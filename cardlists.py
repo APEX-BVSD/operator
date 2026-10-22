@@ -1,17 +1,20 @@
 import pygame
 
 from cards import *
+from settings import MARGIN_X, MARGIN_Y, SCREEN_HEIGHT
 
 
 class CardList:
-    _card_list: list[Card] = []
-    _scroll_offset: int = 0
-    _dragged_object = None
-    _dragged_sprite = None
-    _dragged_index = None
-    _x_offset: int = 0
-    _y_offset: int = 0
-    _dragged: bool = False
+    def __init__(self):
+        self._card_list: list[Card] = []
+        self._scroll_offset: int = 0
+        self._dragged_object = None
+        self._dragged_sprite = None
+        self._dragged_index = None
+        self._x_offset: int = 0
+        self._y_offset: int = 0
+        self.position: tuple[int, int] = (self._x_offset, self._y_offset)
+        self._dragged: bool = False
 
     def process_click(self, x, y):
         """
@@ -45,9 +48,10 @@ class CardList:
         """
         if len(self._card_list) != 0:
             if (
-                x >= self._x_offset-50
+                x >= self._x_offset - 50
                 and x <= (len(self._card_list) + 1) * 100 - 50 + self._x_offset
-                and y <= self._card_list[0].hitbox.bottom + self._card_list[0].position[1]
+                and y
+                <= self._card_list[0].hitbox.bottom + self._card_list[0].position[1]
                 and y >= self._card_list[0].hitbox.top + self._card_list[0].position[1]
             ):
                 new_index: int = (x - 50 - self._x_offset) // 100 + 1
@@ -68,13 +72,13 @@ class CardList:
 
         else:
             if (
-                x >= self._x_offset-50
+                x >= self._x_offset - 50
                 and x <= 50 + self._x_offset
                 and y <= self._y_offset + 100
                 and y >= self._y_offset
-                ):
-                    self._card_list.append(cards._card_list[index])
-                    cards._card_list.pop(index)
+            ):
+                self._card_list.append(cards._card_list[index])
+                cards._card_list.pop(index)
 
         self._dragged = False
 
@@ -90,14 +94,38 @@ class CardList:
     def clear_cards(self):
         self._card_list.clear()
 
+
 class HorizontalList(CardList):
-    _card_list: list[Card]
-    _x_offset: int = 200
-    _y_offset: int = 400
+    def __init__(self):
+        CardList.__init__(self)
+        self._card_list: list[Card]
+        self._x_offset: int = CWIDTH + MARGIN_X
+        self._y_offset: int = SCREEN_HEIGHT - CWIDTH - MARGIN_X // 3
+        self.position: tuple[int, int] = (self._x_offset, self._y_offset)
+        self._dragged: bool = False
+        self._bounding_box: pygame.Rect = pygame.Rect(
+            self._x_offset, self._y_offset, CWIDTH * 5, CWIDTH
+        )
+        self.image: pygame.Surface = pygame.transform.scale(
+            pygame.image.load("assets/listbg.png"),
+            (self._bounding_box.width, self._bounding_box.height),
+        )
 
 
 class VerticalList(CardList):
-    _card_list: list = [random_card(0), random_card(0)]
+    def __init__(self):
+        CardList.__init__(self)
+        self._x_offset = MARGIN_X // 3
+        self._y_offset = MARGIN_Y + CWIDTH // 4
+        self.position = (self._x_offset, self._y_offset)
+        self._card_list: list = [random_card(0), random_card(0)]
+        self._bounding_box: pygame.Rect = pygame.Rect(
+            self._x_offset, self._y_offset, CWIDTH, CWIDTH * 5
+        )
+        self.image: pygame.Surface = pygame.transform.scale(
+            pygame.transform.rotate(pygame.image.load("assets/listbg.png"), 90),
+            (self._bounding_box.width, self._bounding_box.height),
+        )
 
     def process_click(self, x, y):
         """
@@ -132,9 +160,10 @@ class VerticalList(CardList):
         """
         if len(self._card_list) != 0:
             if (
-                y > self._y_offset-50
+                y > self._y_offset - 50
                 and y <= (len(self._card_list) + 1) * 100 - 50 + self._y_offset
-                and x <= self._card_list[0].hitbox.right + self._card_list[0].position[0]
+                and x
+                <= self._card_list[0].hitbox.right + self._card_list[0].position[0]
                 and x >= self._card_list[0].hitbox.left + self._card_list[0].position[0]
             ):
                 new_index: int = (y - 50 - self._y_offset) // 100 + 1
@@ -155,13 +184,13 @@ class VerticalList(CardList):
 
         else:
             if (
-                y >= self._y_offset-50
+                y >= self._y_offset - 50
                 and y <= 50 + self._y_offset
                 and x <= self._x_offset + 100
                 and x >= self._x_offset
-                ):
-                    self._card_list.append(list._card_list[index])
-                    list._card_list.pop(index)
+            ):
+                self._card_list.append(list._card_list[index])
+                list._card_list.pop(index)
 
         self._dragged = False
 
