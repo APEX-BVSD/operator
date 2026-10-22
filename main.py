@@ -22,6 +22,7 @@ from settings import *
 from shop import *
 from start_screen import *
 from uicontrol import *
+from cardlists import *
 
 player: Player = Player()
 
@@ -35,6 +36,17 @@ def submit(p: Player) -> None:
 
 def pause(p: Player) -> None:
     p.game_state = "PAUSE"
+
+def down(p: Player, cl: CardList):
+    if len(p.get_cards()) <= 5:
+        return
+    cl.scroll_index += 1
+    cl.clear_cards()
+    for c in range(len(p.cards())):
+        if c >= cl.scroll_index and c < 5 + cl.scroll_index:
+            # where 5 is the number of cards to be displayed
+            # TODO: ^^^bind this to something^^^
+            cl.cards().append(p.cards()[c])
 
 
 async def main() -> None:
@@ -83,8 +95,18 @@ async def main() -> None:
         (SCREEN_WIDTH - MARGIN_X * 2, SCREEN_HEIGHT - 5 * (MARGIN_Y // 2)),
         "assets/fonts/sambaisdead.ttf",
     )
+
+    scroll_down: Button = Button(
+        down,
+        "assets/pause.png",
+        "",
+        (CWIDTH, CWIDTH),
+        (0, 0),
+        "assets/fonts/sambaisdead.ttf",
+    )
     buttons.append(submit_button)
     buttons.append(pause_button)
+    buttons.append(scroll_down)
 
     round_num: int = 0
 
@@ -113,8 +135,8 @@ async def main() -> None:
             ui.move_dragged(mouse_x, mouse_y)
             ui.draw_objects(screen)
 
-            screen.blit(submit_button.image, submit_button.pos)
-            screen.blit(pause_button.image, pause_button.pos)
+            for b in buttons:
+                screen.blit(b.image, b.pos)
 
         elif player.game_state == "SCORE":
         #    player.set_cards(horizontal_list.cards())
@@ -147,7 +169,10 @@ async def main() -> None:
                 click_x, click_y = event.pos
                 for b in buttons:
                     if b.click_bb.collidepoint(event.pos):
-                        b.function(player)
+                        if b == scroll_down:
+                            b.function(player, vertical_list)
+                        else:
+                            b.function(player)
                 if player.game_state == "PLAYING":
                     ui.process_list_click(click_x, click_y)
 
