@@ -16,17 +16,23 @@ from game_screen import *
 from player import *
 from round_logic import *
 from settings import *
+from shop import *
 from start_screen import *
 from uicontrol import *
-from shop import *
 
 player: Player = Player()
+
 shop: Shop = Shop()
 buttons: list[Button] = []
 
+
 def submit(p: Player) -> None:
     p.game_state = "SCORE"
-    
+
+
+def pause(p: Player) -> None:
+    p.game_state = "PAUSE"
+
 
 async def main() -> None:
 
@@ -59,13 +65,23 @@ async def main() -> None:
 
     submit_button: Button = Button(
         submit,
-        "assets/submit.png",  # "assets/submit.png"
+        "assets/submit.png",
         "",
-        (100, 100),
-        (SCREEN_WIDTH - MARGIN_X - CWIDTH, MARGIN_Y),
+        (CWIDTH, CWIDTH),
+        (SCREEN_WIDTH - MARGIN_Y - CWIDTH, MARGIN_Y),
+        "assets/fonts/sambaisdead.ttf",
+    )
+
+    pause_button: Button = Button(
+        pause,
+        "assets/pause.png",
+        "",
+        (CWIDTH, CWIDTH),
+        (SCREEN_WIDTH - MARGIN_X * 2, SCREEN_HEIGHT - 5 * (MARGIN_Y // 2)),
         "assets/fonts/sambaisdead.ttf",
     )
     buttons.append(submit_button)
+    buttons.append(pause_button)
 
     round_num: int = 0
 
@@ -83,14 +99,19 @@ async def main() -> None:
         if player.game_state == "START_SCREEN":
             player.game_state = display_start_screen(screen)
 
+        elif player.game_state == "PAUSE":
+            _ = display_start_screen(screen)
+
         elif player.game_state == "PLAYING":
             if not round_initialized:
                 base_number: int = initialize_round(player.get_cards(), round_num)
                 round_initialized = True
-            game_screen.display_game_screen(screen)
+            game_screen.display_game_screen(screen, player)
             ui.move_dragged(mouse_x, mouse_y)
             ui.draw_objects(screen)
+
             screen.blit(submit_button.image, submit_button.pos)
+            screen.blit(pause_button.image, pause_button.pos)
 
         elif player.game_state == "SCORE":
         #    player.set_cards(horizontal_list.cards())
@@ -100,7 +121,6 @@ async def main() -> None:
             # player.bonus_score()
 
             print(player.get_score())
-
 
             shop.initialize_shop()
             round_num += 1
@@ -137,7 +157,7 @@ async def main() -> None:
 
                     elif isinstance(shop_output, Card):
                         player.add_card(shop_output)
-                    
+
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 if ui._dragged_object != None:
                     ui.check_list_card_movement(mouse_x, mouse_y)
