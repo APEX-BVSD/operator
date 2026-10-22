@@ -9,6 +9,7 @@ First Last
 import random
 from enum import IntEnum
 from buttons import TextBox
+from settings import SCREEN_WIDTH
 
 import pygame
 
@@ -37,6 +38,12 @@ class Condition:
         if cond != None:
             self._conditions = cond
 
+    def get_con(self) -> PossibleCondition | None:
+        return self._conditions
+
+    def get_n(self) -> int:
+        return self._n
+
     def check(self, base: int, pos: int):
         if self._conditions == None:
             return True
@@ -51,6 +58,7 @@ class Condition:
         return False
 
 
+
 class Card:
     hitbox: pygame.Rect = pygame.Rect(0, 0, CWIDTH, CWIDTH)
     position: tuple = (0, 0)
@@ -62,7 +70,21 @@ class Card:
             self._value = 1
         self._operation = o
         self._condition = c
-        self._t = TextBox("assets/cardbg.png", self._operation + " " + str(self._value), (CWIDTH, CWIDTH), (0, 0), "assets/fonts/Neuropol.otf")
+        self._path: str
+        append_condition: str = ""
+        match self._condition.get_con():
+            case None:
+                self._path = "assets/cardbg.png"
+            case PossibleCondition.IS_NTH:
+                self._path = "assets/nthcardbg.png"
+                append_condition = format(f"\nIF IN\nSLOT {self._condition.get_n() + 1}")
+            case PossibleCondition.FACTORS_INTO_BASE:
+                self._path = "assets/factorcardbg.png"
+
+        self._t = TextBox(self._path, self._operation + " " + str(self._value), (CWIDTH, CWIDTH), (0, 0), "assets/fonts/Neuropol.otf")
+        fsize: int = SCREEN_WIDTH // 45
+        condition_font: Font = pygame.Font("assets/fonts/sambaisdead.ttf", size=fsize)
+        self._t.image.blit(condition_font.render(append_condition, True, (255, 255, 255)), (CWIDTH // 5, CWIDTH // 20))
         self.image = self._t.image
         self.cost = 50 # Make sure to actually set this somewhere
 
@@ -104,7 +126,8 @@ def random_card(difficulty: int) -> Card:
             v = 1
     else:
         v: int = random.randint(
-            0, 5 + difficulty * 2
+            -(5 + difficulty * 2),
+            5 + difficulty * 2
         )  # You'll never guess what this is!
 
     if coinflip > int(difficulty * 2.5):
@@ -114,7 +137,8 @@ def random_card(difficulty: int) -> Card:
     else:
         c: Condition = Condition()
 
-    o: str = "ADD"
+    o: str
+
     operation_coinflip: int = random.randint(1, 4)
     match operation_coinflip:
         case 1:
