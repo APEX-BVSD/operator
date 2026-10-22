@@ -32,6 +32,11 @@ def display_score(p: Player):
 class GameScreen:
     current_number: int = -1
 
+    bg_img = pygame.image.load("assets/background.png")
+    bg_frame = pygame.transform.scale(
+                pygame.image.load("assets/bg_frame.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)
+            )
+
     def display_game_screen(self, screen: pygame.Surface, player: Player):
         """
         Displays the game screen.
@@ -41,16 +46,9 @@ class GameScreen:
 
         """
 
-        bg = pygame.transform.scale(
-            pygame.image.load("assets/background.png"),
-            (SCREEN_WIDTH, SCREEN_HEIGHT),
-        )
+        bg = pygame.transform.scale(self.bg_img, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
-        bg.blit(
-            pygame.transform.scale(
-                pygame.image.load("assets/bg_frame.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)
-            )
-        )
+        bg.blit(self.bg_frame)
 
         bg.blit(display_score(player))
 
