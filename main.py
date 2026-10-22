@@ -1,10 +1,13 @@
 """
-Describe your game.
+SMOOTH OPERATOR is an incremental game where you use mathematical OPERATIONS to maximize your SCORE
 Sep 2026
 Elizabeth Posusta
 Carter Quarles
-First Last
 """
+
+# TODO: cap number of cards in horizontal_list at 5
+#       add scrollbar to vertical_list
+#       tutorial screen
 
 import asyncio
 
@@ -163,7 +166,7 @@ async def main() -> None:
                     ui.check_list_card_movement(mouse_x, mouse_y)
                 reset_values = True
 
-            
+
 
         # render the screen
         pygame.display.flip()

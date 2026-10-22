@@ -20,7 +20,7 @@ from settings import MARGIN_X, MARGIN_Y, SCREEN_HEIGHT, SCREEN_WIDTH
 def display_score(p: Player):
     score_display: TextBox = TextBox(
         Surface((SCREEN_WIDTH, SCREEN_HEIGHT), SRCALPHA),
-        str(p.get_score()),
+        str(int(p.get_score())),
         (2 * SCREEN_WIDTH // 3, SCREEN_HEIGHT // 10),
         (0, 0),
         "assets/fonts/homevideo.ttf",
