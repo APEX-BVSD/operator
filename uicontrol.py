@@ -77,10 +77,14 @@ class UI:
         """
         self._drawn_objects.clear()
 
+        i: int = 0
         for list in self._card_lists:
             self._drawn_objects.append(list)
+            i = 0
             for card in list._card_list:
-                self._drawn_objects.append(card)
+                if list.scroll_index <= i < 5 + list.scroll_index:
+                    self._drawn_objects.append(card)
+                i += 1
 
         for obj in self._drawn_objects:
             screen.blit(obj.image, obj.position)
@@ -90,3 +94,5 @@ class UI:
 
     def get_lists(self) -> list[CardList]:
         return self._card_lists
+
+    

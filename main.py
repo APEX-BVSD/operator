@@ -14,6 +14,7 @@ import asyncio
 import pygame
 
 from buttons import *
+from cardlists import *
 from cards import Card
 from game_screen import *
 from player import *
@@ -29,6 +30,13 @@ shop: Shop = Shop()
 buttons: list[Button] = []
 
 
+# set the screen dimensions
+screen: pygame.Surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+# create the UI
+ui: UI = UI()
+
+
 def submit(p: Player) -> None:
     p.game_state = "SCORE"
 
@@ -37,19 +45,25 @@ def pause(p: Player) -> None:
     p.game_state = "PAUSE"
 
 
+def down(p: Player, cl: CardList):
+    if len(cl.cards()) <= 5 and len(p.get_cards()) <= 5:
+        return
+    cl.scroll_down()
+
+
+def up(p: Player, cl: CardList):
+    if len(cl.cards()) <= 5 or cl.scroll_index == 0:
+        return
+    cl.scroll_up()
+
+
 async def main() -> None:
 
     round_initialized: bool = False
     reset_values: bool = False
+    button_pressed: bool = False
 
     pygame.init()
-
-    # set the screen dimensions
-    screen: pygame.Surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
-    # create the UI
-    ui: UI = UI()
-
     # create the shop
     # shop: Shop = Shop()
 
@@ -83,8 +97,29 @@ async def main() -> None:
         (SCREEN_WIDTH - MARGIN_X * 2, SCREEN_HEIGHT - 5 * (MARGIN_Y // 2)),
         "assets/fonts/sambaisdead.ttf",
     )
+
+    scroll_down: Button = Button(
+        down,
+        "assets/scrolldown.png",
+        "",
+        (CWIDTH // 2, CWIDTH // 2),
+        (CWIDTH // 2, SCREEN_HEIGHT - (2 * (CWIDTH // 3))),
+        "assets/fonts/sambaisdead.ttf",
+    )
+
+    scroll_up: Button = Button(
+        up,
+        "assets/scrollup.png",
+        "",
+        (CWIDTH // 2, CWIDTH // 2),
+        (CWIDTH // 2, 2 * (CWIDTH // 3)),
+        "assets/fonts/sambaisdead.ttf",
+    )
+
     buttons.append(submit_button)
     buttons.append(pause_button)
+    buttons.append(scroll_down)
+    buttons.append(scroll_up)
 
     round_num: int = 0
 
@@ -113,13 +148,13 @@ async def main() -> None:
             ui.move_dragged(mouse_x, mouse_y)
             ui.draw_objects(screen)
 
-            screen.blit(submit_button.image, submit_button.pos)
-            screen.blit(pause_button.image, pause_button.pos)
+            for b in buttons:
+                screen.blit(b.image, b.pos)
 
         elif player.game_state == "SCORE":
-        #    player.set_cards(horizontal_list.cards())
-        #     for c in ui.get_lists()[0].cards():
-        #         player.add_scoring_card(c)
+            #    player.set_cards(horizontal_list.cards())
+            #     for c in ui.get_lists()[0].cards():
+            #         player.add_scoring_card(c)
             player.calculate_score(base_number, horizontal_list._card_list)
             # player.bonus_score()
 
@@ -140,16 +175,21 @@ async def main() -> None:
             running = False
 
         for event in pygame.event.get():
+            button_pressed = False
             if event.type == pygame.QUIT:
                 running = False
-
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 click_x, click_y = event.pos
                 for b in buttons:
                     if b.click_bb.collidepoint(event.pos):
-                        b.function(player)
-                if player.game_state == "PLAYING":
-                    ui.process_list_click(click_x, click_y)
+                        button_pressed = True
+                        if b == scroll_down or b == scroll_up:
+                            b.function(player, vertical_list)
+                        else:
+                            b.function(player)
+                if not button_pressed:
+                    if player.game_state == "PLAYING":
+                        ui.process_list_click(click_x, click_y)
 
                 if player.game_state == "SHOP":
                     shop_output = shop.process_click(click_x, click_y, player)
@@ -165,8 +205,6 @@ async def main() -> None:
                 if ui._dragged_object != None:
                     ui.check_list_card_movement(mouse_x, mouse_y)
                 reset_values = True
-
-
 
         # render the screen
         pygame.display.flip()
