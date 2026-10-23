@@ -27,6 +27,7 @@ class Condition:
     _conditions: PossibleCondition | None = None
     _n: int = 0
     _v: int = 0
+    _f: int = random.randint(2,10)
 
     def __init__(
         self,
@@ -46,6 +47,9 @@ class Condition:
     def get_n(self) -> int:
         return self._n
 
+    def get_f(self) -> int:
+        return self._f
+
     def check(self, base: int, pos: int):
         if self._conditions == None:
             return True
@@ -55,7 +59,7 @@ class Condition:
                     if pos == self._n:
                         return True
                 case PossibleCondition.FACTORS_INTO_BASE:
-                    if base % self._v == 0:
+                    if base % self._f == 0:
                         return True
         return False
 
@@ -64,7 +68,9 @@ class Card:
     hitbox: pygame.Rect = pygame.Rect(0, 0, CWIDTH, CWIDTH)
     position: tuple[int] = (0, 0)
 
-    def __init__(self, v: int, o: str, c: Condition):
+    def __init__(self, v: int, o: str, c: Condition, h: bool):
+        self._horizontal: bool = False
+        self._draggable = True
         self._value = v
         if self._value == 0:
             self._value = 1
@@ -82,6 +88,13 @@ class Card:
                 )
             case PossibleCondition.FACTORS_INTO_BASE:
                 self._path = "assets/factorcardbg.png"
+                append_condition = format(
+                    f"\nIF FACTOR\nOF {self._condition.get_f()}"
+                )
+        if h:
+            self._horizontal = True
+            self._path = "assets/horizcardbg.png"
+            
 
         self._t = TextBox(
             self._path,
@@ -116,16 +129,20 @@ class Card:
     def get_number(self):
         return self._value
 
+    def get_horizontal(self):
+        return self._horizontal
 
 """
     Instantiate a new, randomized Card
 """
 
 
-def random_card(difficulty: int) -> Card:
+def random_card(difficulty: int, horizontal: bool) -> Card:
     # Janky coinflip to decide if the number will be a decimal. Becomes more likely as the game goes on/`difficulty` is increased.
     #   Also used to determine conditions
     coinflip: int = random.randint(0, 5 * difficulty)
+    h: bool = False
+
     if (
         coinflip > difficulty * 2
     ):  # Arbitrary threshold. Needs to be refined/tested for balance
@@ -137,12 +154,12 @@ def random_card(difficulty: int) -> Card:
             v = 1
     else:
         v: int = random.randint(
-            -(5 + difficulty * 2), 5 + difficulty * 2
+            (5 + difficulty * 2), 5 + difficulty * 2
         )  # You'll never guess what this is!
 
     if coinflip > int(difficulty * 2.5):
         c: Condition = Condition(
-            random.randint(0, 5), v, PossibleCondition(random.randint(1, 2))
+            random.randint(0, 4), v, PossibleCondition(random.randint(1, 2))
         )
     else:
         c: Condition = Condition()
@@ -160,4 +177,8 @@ def random_card(difficulty: int) -> Card:
         case 4:
             o = "DIV"
 
-    return Card(v, o, c)
+    if horizontal:
+        h = True
+
+    return Card(v, o, c, h)
+

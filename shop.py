@@ -45,7 +45,7 @@ class Shop():
         self._available_cards.clear()
 
         for _ in range(6):
-            self._available_cards.append(random_card(5))
+            self._available_cards.append(random_card(5, False))
 
         counter: int = 0
         
