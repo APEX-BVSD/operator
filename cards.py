@@ -91,7 +91,7 @@ class Card:
             "assets/fonts/Neuropol.otf",
         )
         fsize: int = SCREEN_WIDTH // 45
-        condition_font: Font = pygame.Font("assets/fonts/sambaisdead.ttf", size=fsize)
+        condition_font: pygame.Font = pygame.Font("assets/fonts/sambaisdead.ttf", size=fsize)
         self._t.image.blit(
             condition_font.render(append_condition, True, (255, 255, 255)),
             (CWIDTH // 5, CWIDTH // 20),

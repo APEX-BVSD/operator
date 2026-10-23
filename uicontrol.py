@@ -80,6 +80,7 @@ class UI:
         i: int = 0
         for list in self._card_lists:
             self._drawn_objects.append(list)
+            i = 0
             for card in list._card_list:
                 if list.scroll_index <= i < 5 + list.scroll_index:
                     self._drawn_objects.append(card)
@@ -93,3 +94,5 @@ class UI:
 
     def get_lists(self) -> list[CardList]:
         return self._card_lists
+
+    

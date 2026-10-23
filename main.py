@@ -61,6 +61,7 @@ async def main() -> None:
 
     round_initialized: bool = False
     reset_values: bool = False
+    button_pressed: bool = False
 
     pygame.init()
     # create the shop
@@ -174,19 +175,21 @@ async def main() -> None:
             running = False
 
         for event in pygame.event.get():
+            button_pressed = False
             if event.type == pygame.QUIT:
                 running = False
-
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 click_x, click_y = event.pos
                 for b in buttons:
                     if b.click_bb.collidepoint(event.pos):
+                        button_pressed = True
                         if b == scroll_down or b == scroll_up:
                             b.function(player, vertical_list)
                         else:
                             b.function(player)
-                if player.game_state == "PLAYING":
-                    ui.process_list_click(click_x, click_y)
+                if not button_pressed:
+                    if player.game_state == "PLAYING":
+                        ui.process_list_click(click_x, click_y)
 
                 if player.game_state == "SHOP":
                     shop_output = shop.process_click(click_x, click_y, player)

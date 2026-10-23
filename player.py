@@ -7,7 +7,7 @@ class Player:
     game_state: str = "START_SCREEN"
 
     def __init__(self):
-        self._score = 0
+        self._score = 9999
         self._cards: list[Card] = []
         # self._score_cards: list[Card] = []
         self._score_cards: list[Card] = []

@@ -20,11 +20,13 @@ class CardList:
 
     def scroll_up(self):
         self.scroll_index -= 1
-        self._y_offset += CWIDTH
+        self._y_offset += CWIDTH * 2
 
     def scroll_down(self):
-        self.scroll_index += 1
-        self._y_offset -= CWIDTH
+        if self.scroll_index < len(self._card_list) - 1:
+            self.scroll_index += 1
+            self._y_offset -= CWIDTH * 2
+            print(self.scroll_index)
 
     def process_click(self, x, y):
         """
@@ -60,8 +62,7 @@ class CardList:
             if (
                 x >= self._x_offset - 50
                 and x <= (len(self._card_list) + 1) * 100 - 50 + self._x_offset
-                and y
-                <= self._card_list[0].hitbox.bottom + self._card_list[0].position[1]
+                and y <= self._card_list[0].hitbox.bottom + self._card_list[0].position[1]
                 and y >= self._card_list[0].hitbox.top + self._card_list[0].position[1]
             ):
                 new_index: int = (x - 50 - self._x_offset) // 100 + 1
@@ -216,5 +217,5 @@ class VerticalList(CardList):
     def set_card_position(self):
         counter: int = 0
         for card in self._card_list:
-            card.position = (self._x_offset, self._y_offset + 100 * counter)
+            card.position = (self._x_offset, self._y_offset + 100 * counter + self.scroll_index * 100)
             counter += 1
