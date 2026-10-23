@@ -79,6 +79,7 @@ async def main() -> None:
     # MAIN GAME LOOP
     running: bool = True
     game_screen: GameScreen = GameScreen()
+    start_screen: StartScreen = StartScreen()
 
     howtoplay: pygame.Surface = pygame.transform.scale(
         pygame.image.load("assets/howtoplay.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -139,7 +140,7 @@ async def main() -> None:
             ui.setter(False)
 
         if player.game_state == "START_SCREEN":
-            player.game_state = display_start_screen(screen)
+            player.game_state = start_screen.display_start_screen(screen)
 
         elif player.game_state == "PAUSE":
             screen.blit(howtoplay)
