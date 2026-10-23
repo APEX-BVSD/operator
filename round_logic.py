@@ -20,7 +20,7 @@ def initialize_round(cards: list[Card], roundnum: int):
     # horizontal_list._card_list.clear()
 
     for _ in range(random_card_amount):
-         horizontal_list._card_list.append(random_card(roundnum))
+         horizontal_list._card_list.append(random_card(roundnum, True))
 
 
     number:int = random.randint(1,100) # Maybe have this change as the game goes on?

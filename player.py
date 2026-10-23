@@ -74,4 +74,4 @@ class Player:
         return self._score_cards
 
     def set_score(self, score):
-        self._score = score
+        self._score = round(score)
