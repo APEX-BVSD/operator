@@ -8,13 +8,15 @@ First Last
 
 import random
 from enum import IntEnum
-from buttons import TextBox
-from settings import SCREEN_WIDTH
 
 import pygame
 
+from buttons import TextBox
+from settings import SCREEN_WIDTH
+
 CWIDTH: int = 100
 PIX_PER_PT: float = 1.5
+
 
 class PossibleCondition(IntEnum):
     IS_NTH = 1
@@ -58,11 +60,9 @@ class Condition:
         return False
 
 
-
 class Card:
     hitbox: pygame.Rect = pygame.Rect(0, 0, CWIDTH, CWIDTH)
-    position: tuple = (0, 0)
-    _value: int
+    position: tuple[int] = (0, 0)
 
     def __init__(self, v: int, o: str, c: Condition):
         self._value = v
@@ -77,16 +77,27 @@ class Card:
                 self._path = "assets/cardbg.png"
             case PossibleCondition.IS_NTH:
                 self._path = "assets/nthcardbg.png"
-                append_condition = format(f"\nIF IN\nSLOT {self._condition.get_n() + 1}")
+                append_condition = format(
+                    f"\nIF IN\nSLOT {self._condition.get_n() + 1}"
+                )
             case PossibleCondition.FACTORS_INTO_BASE:
                 self._path = "assets/factorcardbg.png"
 
-        self._t = TextBox(self._path, self._operation + " " + str(self._value), (CWIDTH, CWIDTH), (0, 0), "assets/fonts/Neuropol.otf")
+        self._t = TextBox(
+            self._path,
+            self._operation + " " + str(self._value),
+            (CWIDTH, CWIDTH),
+            (0, 0),
+            "assets/fonts/Neuropol.otf",
+        )
         fsize: int = SCREEN_WIDTH // 45
         condition_font: Font = pygame.Font("assets/fonts/sambaisdead.ttf", size=fsize)
-        self._t.image.blit(condition_font.render(append_condition, True, (255, 255, 255)), (CWIDTH // 5, CWIDTH // 20))
+        self._t.image.blit(
+            condition_font.render(append_condition, True, (255, 255, 255)),
+            (CWIDTH // 5, CWIDTH // 20),
+        )
         self.image = self._t.image
-        self.cost = 50 # Make sure to actually set this somewhere
+        self.cost = 50  # Make sure to actually set this somewhere
 
     def apply(self, num: int):
         match self._operation:
@@ -126,8 +137,7 @@ def random_card(difficulty: int) -> Card:
             v = 1
     else:
         v: int = random.randint(
-            -(5 + difficulty * 2),
-            5 + difficulty * 2
+            -(5 + difficulty * 2), 5 + difficulty * 2
         )  # You'll never guess what this is!
 
     if coinflip > int(difficulty * 2.5):

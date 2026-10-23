@@ -1,3 +1,5 @@
+import copy
+
 import pygame
 
 from cards import *
@@ -6,8 +8,8 @@ from settings import MARGIN_X, MARGIN_Y, SCREEN_HEIGHT
 
 class CardList:
     def __init__(self):
+        self.scroll_index: int = 0
         self._card_list: list[Card] = []
-        self._scroll_offset: int = 0
         self._dragged_object = None
         self._dragged_sprite = None
         self._dragged_index = None
@@ -15,6 +17,14 @@ class CardList:
         self._y_offset: int = 0
         self.position: tuple[int, int] = (self._x_offset, self._y_offset)
         self._dragged: bool = False
+
+    def scroll_up(self):
+        self.scroll_index -= 1
+        self._y_offset += CWIDTH
+
+    def scroll_down(self):
+        self.scroll_index += 1
+        self._y_offset -= CWIDTH
 
     def process_click(self, x, y):
         """
@@ -83,9 +93,9 @@ class CardList:
         self._dragged = False
 
     def set_card_position(self):
-        counter: int = 0
+        counter: int = copy.copy(self.scroll_index)
         for card in self._card_list:
-            card.position = (100 * counter + self._x_offset, self._y_offset)
+            card.position = (CWIDTH * counter + self._x_offset, self._y_offset)
             counter += 1
 
     def cards(self):
@@ -97,6 +107,7 @@ class CardList:
 
 class HorizontalList(CardList):
     def __init__(self):
+        self.scroll_index = 0
         CardList.__init__(self)
         self._card_list: list[Card]
         self._x_offset: int = CWIDTH + MARGIN_X
@@ -118,14 +129,22 @@ class VerticalList(CardList):
         self._x_offset = MARGIN_X // 3
         self._y_offset = MARGIN_Y + CWIDTH // 4
         self.position = (self._x_offset, self._y_offset)
-        self._card_list: list = [random_card(0), random_card(0)]
+        self._card_list: list[Card] = [random_card(0), random_card(0)]
         self._bounding_box: pygame.Rect = pygame.Rect(
             self._x_offset, self._y_offset, CWIDTH, CWIDTH * 5
         )
-        self.image: pygame.Surface = pygame.transform.scale(
-            pygame.transform.rotate(pygame.image.load("assets/listbg.png"), 90),
-            (self._bounding_box.width, self._bounding_box.height),
+        self.image: pygame.Surface = pygame.Surface(
+            (self._bounding_box.width, self._bounding_box.height), pygame.SRCALPHA
         )
+        self.image.blit(
+            pygame.transform.scale(
+                pygame.transform.rotate(pygame.image.load("assets/listbg.png"), 90),
+                (self._bounding_box.width, self._bounding_box.height),
+            )
+        )
+
+    def append(self, c: Card):
+        self._card_list.append(c)
 
     def process_click(self, x, y):
         """

@@ -14,6 +14,7 @@ import asyncio
 import pygame
 
 from buttons import *
+from cardlists import *
 from cards import Card
 from game_screen import *
 from player import *
@@ -22,12 +23,18 @@ from settings import *
 from shop import *
 from start_screen import *
 from uicontrol import *
-from cardlists import *
 
 player: Player = Player()
 
 shop: Shop = Shop()
 buttons: list[Button] = []
+
+
+# set the screen dimensions
+screen: pygame.Surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+# create the UI
+ui: UI = UI()
 
 
 def submit(p: Player) -> None:
@@ -37,16 +44,17 @@ def submit(p: Player) -> None:
 def pause(p: Player) -> None:
     p.game_state = "PAUSE"
 
+
 def down(p: Player, cl: CardList):
-    if len(p.get_cards()) <= 5:
+    if len(cl.cards()) <= 5 and len(p.get_cards()) <= 5:
         return
-    cl.scroll_index += 1
-    cl.clear_cards()
-    for c in range(len(p.cards())):
-        if c >= cl.scroll_index and c < 5 + cl.scroll_index:
-            # where 5 is the number of cards to be displayed
-            # TODO: ^^^bind this to something^^^
-            cl.cards().append(p.cards()[c])
+    cl.scroll_down()
+
+
+def up(p: Player, cl: CardList):
+    if len(cl.cards()) <= 5 or cl.scroll_index == 0:
+        return
+    cl.scroll_up()
 
 
 async def main() -> None:
@@ -55,13 +63,6 @@ async def main() -> None:
     reset_values: bool = False
 
     pygame.init()
-
-    # set the screen dimensions
-    screen: pygame.Surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
-    # create the UI
-    ui: UI = UI()
-
     # create the shop
     # shop: Shop = Shop()
 
@@ -98,15 +99,26 @@ async def main() -> None:
 
     scroll_down: Button = Button(
         down,
-        "assets/pause.png",
+        "assets/scrolldown.png",
         "",
-        (CWIDTH, CWIDTH),
-        (0, 0),
+        (CWIDTH // 2, CWIDTH // 2),
+        (CWIDTH // 2, SCREEN_HEIGHT - (2 * (CWIDTH // 3))),
         "assets/fonts/sambaisdead.ttf",
     )
+
+    scroll_up: Button = Button(
+        up,
+        "assets/scrollup.png",
+        "",
+        (CWIDTH // 2, CWIDTH // 2),
+        (CWIDTH // 2, 2 * (CWIDTH // 3)),
+        "assets/fonts/sambaisdead.ttf",
+    )
+
     buttons.append(submit_button)
     buttons.append(pause_button)
     buttons.append(scroll_down)
+    buttons.append(scroll_up)
 
     round_num: int = 0
 
@@ -139,9 +151,9 @@ async def main() -> None:
                 screen.blit(b.image, b.pos)
 
         elif player.game_state == "SCORE":
-        #    player.set_cards(horizontal_list.cards())
-        #     for c in ui.get_lists()[0].cards():
-        #         player.add_scoring_card(c)
+            #    player.set_cards(horizontal_list.cards())
+            #     for c in ui.get_lists()[0].cards():
+            #         player.add_scoring_card(c)
             player.calculate_score(base_number, horizontal_list._card_list)
             # player.bonus_score()
 
@@ -169,7 +181,7 @@ async def main() -> None:
                 click_x, click_y = event.pos
                 for b in buttons:
                     if b.click_bb.collidepoint(event.pos):
-                        if b == scroll_down:
+                        if b == scroll_down or b == scroll_up:
                             b.function(player, vertical_list)
                         else:
                             b.function(player)
@@ -190,8 +202,6 @@ async def main() -> None:
                 if ui._dragged_object != None:
                     ui.check_list_card_movement(mouse_x, mouse_y)
                 reset_values = True
-
-
 
         # render the screen
         pygame.display.flip()

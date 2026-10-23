@@ -1,3 +1,5 @@
+import copy
+
 from cards import *
 
 
@@ -8,7 +10,7 @@ class Player:
         self._score = 0
         self._cards: list[Card] = []
         # self._score_cards: list[Card] = []
-        self._score_cards: int = 0
+        self._score_cards: list[Card] = []
         # for _ in range(5):
         #     self._cards.append(random_card(0))
         # for _ in range(5):
@@ -63,7 +65,7 @@ class Player:
         return self._score
 
     def get_cards(self) -> list[Card]:
-        return self._cards
+        return copy.copy(self._cards)
 
     def set_cards(self, cards: list[Card]) -> None:
         self._cards = cards
