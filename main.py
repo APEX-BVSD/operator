@@ -80,6 +80,10 @@ async def main() -> None:
     running: bool = True
     game_screen: GameScreen = GameScreen()
 
+    howtoplay: pygame.Surface = pygame.transform.scale(
+        pygame.image.load("assets/howtoplay.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)
+    )
+
     submit_button: Button = Button(
         submit,
         "assets/submit.png",
@@ -138,7 +142,10 @@ async def main() -> None:
             player.game_state = display_start_screen(screen)
 
         elif player.game_state == "PAUSE":
-            _ = display_start_screen(screen)
+            screen.blit(howtoplay)
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.KEYDOWN:
+                    player.game_state = "PLAYING"
 
         elif player.game_state == "PLAYING":
             if not round_initialized:
